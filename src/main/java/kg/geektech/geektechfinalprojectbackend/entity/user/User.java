@@ -1,14 +1,14 @@
 package kg.geektech.geektechfinalprojectbackend.entity.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import kg.geektech.geektechfinalprojectbackend.entity.BaseEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -17,37 +17,40 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "users")
+@AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity implements UserDetails {
     @NotNull
-    @Length(min = 14, max = 14, message = "Введите корректный ПИН")
-    @Column(name = "pin")
-    private String pin;
+    @Size(min = 14, max = 14, message = "Введите корректный ПИН")
+    @Column(name = "pin", unique = true)
+    String pin;
 
     @NotNull
-    @Length(min = 2, message = "Введите ФИО")
+    @Size(min = 2, message = "Введите корректный ФИО")
     @Column(name = "full_name")
-    private String fullName;
-
-    @Column(name = "email")
-    private String email;
+    String fullName;
 
     @NotNull
-    @Column(name = "password")
-    private String password;
+    @Email(message = "Введите корректный email")
+    @Column(name = "email")
+    String email;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "ad_group_role",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles;
+    @NotNull
+    @Size(min = 2, message = "Введите корректный пароль от 3 символов")
+    @Column(name = "password")
+    String password;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return List.of(new SimpleGrantedAuthority(role.getName()));
     }
 
     @Override
@@ -73,5 +76,16 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public enum Role {
+        USER("user"),
+        ADMIN("admin"),
+        ;
+
+        final String name;
     }
 }

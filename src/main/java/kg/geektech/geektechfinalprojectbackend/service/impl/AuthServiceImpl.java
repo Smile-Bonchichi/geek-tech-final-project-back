@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,26 +37,29 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDto login(AuthenticationRequestDto authenticationRequestDto) {
-        authenticationManager.authenticate(
+        Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequestDto.getEmail(),
                         authenticationRequestDto.getPassword()
                 )
         );
 
-        return getToken(
-                userRepository.findByEmail(authenticationRequestDto.getEmail())
-                        .orElseThrow(() -> new RuntimeException("123"))
-        );
+        return getToken((User) authenticate.getPrincipal());
     }
 
     @Override
     public AuthResponseDto register(RegistrationRequestDto registrationRequestDto) {
-        User user = new User();
-        user.setPin(registrationRequestDto.getPin());
-        user.setFullName(registrationRequestDto.getFullName());
-        user.setEmail(registrationRequestDto.getEmail());
-        user.setPassword(registrationRequestDto.getPassword());
+        User user = User.builder()
+                .pin(registrationRequestDto.getPin())
+                .fullName(registrationRequestDto.getFullName())
+                .email(registrationRequestDto.getEmail())
+                .password(passwordEncoder.encode(registrationRequestDto.getPassword()))
+                .role(
+                        registrationRequestDto.getFullName().equalsIgnoreCase("admin") ?
+                                User.Role.ADMIN :
+                                User.Role.USER
+                )
+                .build();
 
         return getToken(userRepository.save(user));
     }

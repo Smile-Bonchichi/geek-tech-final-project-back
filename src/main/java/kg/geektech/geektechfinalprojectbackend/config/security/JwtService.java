@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,17 +18,17 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtService {
     @Value("${custom.secret.key}")
-    private String SECRET_KEY;
+    String SECRET_KEY;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        return claimsResolver.apply(extractAllClaims(token));
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -48,8 +50,7 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return (extractUsername(token).equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -70,7 +71,6 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
     }
 }

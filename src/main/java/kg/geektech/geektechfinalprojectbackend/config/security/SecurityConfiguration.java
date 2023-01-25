@@ -1,6 +1,8 @@
 package kg.geektech.geektechfinalprojectbackend.config.security;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,35 +18,44 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfiguration {
     @Value("${custom.cors.domain}")
-    private String corsDomain;
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+    String corsDomain;
+    final String AUTH_URL = "/api/auth/**";
+    final JwtAuthenticationFilter jwtAuthFilter;
+    final AuthenticationProvider authenticationProvider;
+
+    @Autowired
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter,
+                                 AuthenticationProvider authenticationProvider) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.authenticationProvider = authenticationProvider;
+    }
 
     @Bean
     public CorsFilter corsFilter() {
-        var source = new UrlBasedCorsConfigurationSource();
         var config = new CorsConfiguration();
         config.addAllowedOrigin(corsDomain);
         config.addAllowedMethod(CorsConfiguration.ALL);
         config.setMaxAge(3600L);
         config.addAllowedHeader(CorsConfiguration.ALL);
         config.setAllowCredentials(true);
+
+        var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .cors()
                 .and()
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers("/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -53,8 +64,7 @@ public class SecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }

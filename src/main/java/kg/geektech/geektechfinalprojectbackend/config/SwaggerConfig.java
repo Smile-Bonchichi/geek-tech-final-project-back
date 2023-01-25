@@ -5,6 +5,8 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +14,14 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SwaggerConfig {
+    final String VERSION = "1.0.0";
+
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("1.0.0")
+                .group(VERSION)
                 .pathsToMatch("/**")
                 .build();
     }
@@ -29,7 +34,7 @@ public class SwaggerConfig {
                         List.of(
                                 new Server()
                                         .url("http://localhost:8080/api")
-                                        .description("Dev service")
+                                        .description("Local service")
                         )
                 );
     }
@@ -49,6 +54,6 @@ public class SwaggerConfig {
                                 .name("Apache 2.0")
                                 .url("http://springdoc.org")
                 )
-                .version("1.0.0");
+                .version(VERSION);
     }
 }

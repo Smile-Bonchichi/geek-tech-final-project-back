@@ -30,5 +30,4 @@ public class TimeHelper {
                 .from(dateToConvert.atZone(ZoneId.systemDefault())
                         .toInstant());
     }
-
 }

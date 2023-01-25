@@ -1,7 +1,7 @@
 package kg.geektech.geektechfinalprojectbackend.config.security;
 
 import kg.geektech.geektechfinalprojectbackend.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,10 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
-
     private final UserRepository repository;
+
+    @Autowired
+    public ApplicationConfig(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -43,5 +46,4 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
