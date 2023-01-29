@@ -1,5 +1,6 @@
-package kg.geektech.geektechfinalprojectbackend.config.security;
+package kg.geektech.geektechfinalprojectbackend.config;
 
+import kg.geektech.geektechfinalprojectbackend.config.security.JwtAuthenticationFilter;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +20,16 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SecurityConfiguration {
+public class SecurityConfig {
     @Value("${custom.cors.domain}")
     String corsDomain;
-    final String AUTH_URL = "/api/auth/**";
+    final String WHITE_LIST_ENDPOINT = "/auth/**";
     final JwtAuthenticationFilter jwtAuthFilter;
     final AuthenticationProvider authenticationProvider;
 
     @Autowired
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter,
-                                 AuthenticationProvider authenticationProvider) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
+                          AuthenticationProvider authenticationProvider) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationProvider = authenticationProvider;
     }
@@ -55,7 +56,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/**")
+                .requestMatchers(WHITE_LIST_ENDPOINT)
                 .permitAll()
                 .anyRequest()
                 .authenticated()

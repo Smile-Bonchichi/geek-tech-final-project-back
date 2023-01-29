@@ -3,6 +3,7 @@ package kg.geektech.geektechfinalprojectbackend.entity.image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.geektechfinalprojectbackend.entity.BaseEntity;
+import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -24,7 +25,12 @@ public class Image extends BaseEntity {
     @Column(name = "type")
     ImageType type;
 
-    enum ImageType {
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    User user;
+
+    public enum ImageType {
         AVATAR,
         IMAGE,
         ;

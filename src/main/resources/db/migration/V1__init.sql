@@ -71,6 +71,8 @@ create table users
 );
 alter table if exists categories add constraint UK_t8o6pivur7nn124jehx7cygw5 unique (name);
 alter table if exists images add constraint UK_1geq4ru4qgqmdel0mhpejdsfb unique (url);
+alter table if exists images add column user_id bigint not null;
+alter table if exists images add constraint FK13ljqfrfwbyvnsdhihwta8cpr foreign key (user_id) references users;
 alter table if exists products add constraint UK_o61fmio5yukmmiqgnxf8pnavn unique (name);
 alter table if exists users add constraint UK_9d3wgtts126kg64e415t9ojl1 unique (pin);
 alter table if exists basket_product add constraint FKlid8i5029oacbjo102guik1gr foreign key (product_id) references products;
