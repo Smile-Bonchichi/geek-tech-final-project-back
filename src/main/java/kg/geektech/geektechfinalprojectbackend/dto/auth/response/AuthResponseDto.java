@@ -1,5 +1,6 @@
 package kg.geektech.geektechfinalprojectbackend.dto.auth.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,5 +12,6 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthResponseDto extends BaseResponse {
+    @Schema(description = "Токен", example = "eyJhbGciOiJIUzI1NiJ9...")
     String token;
 }

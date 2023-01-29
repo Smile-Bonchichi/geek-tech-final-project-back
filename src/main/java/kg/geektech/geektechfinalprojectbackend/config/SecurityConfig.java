@@ -23,7 +23,8 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     @Value("${custom.cors.domain}")
     String corsDomain;
-    final String WHITE_LIST_ENDPOINT = "/auth/**";
+//    final String WHITE_LIST_ENDPOINT = "/auth/**";
+    final String WHITE_LIST_ENDPOINT = "/**";
     final JwtAuthenticationFilter jwtAuthFilter;
     final AuthenticationProvider authenticationProvider;
 

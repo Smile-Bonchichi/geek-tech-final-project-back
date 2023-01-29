@@ -32,7 +32,7 @@ public class Image extends BaseEntity {
 
     public enum ImageType {
         AVATAR,
-        IMAGE,
+        PRODUCT,
         ;
     }
 }

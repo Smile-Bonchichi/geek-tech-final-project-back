@@ -27,4 +27,8 @@ spring:
       max-request-size: 50MB
   mvc:
     path match:
-      matching-strategy: ant_path_matcher
+      matching-strategy: ANT_PATH_MATCHER
+
+springdoc:
+  swagger-ui:
+    path: /swagger
