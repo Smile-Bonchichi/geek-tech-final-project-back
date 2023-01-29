@@ -1,4 +1,4 @@
-package kg.geektech.geektechfinalprojectbackend.controller;
+package kg.geektech.geektechfinalprojectbackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user/auth")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Авторизация")
 public class AuthController {
@@ -73,15 +73,6 @@ public class AuthController {
     @Operation(summary = "Регистрация", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешная регистрация",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthResponseDto.class)
-                            )
-                    }),
-            @ApiResponse(
                     responseCode = "400",
                     description = "Не коректные данные",
                     content = {
@@ -100,8 +91,7 @@ public class AuthController {
                             )
                     })
     })
-    public ResponseEntity<?> register(@RequestBody @Valid RegistrationRequestDto registrationRequestDto) {
-        return ResponseEntity
-                .ok(authService.register(registrationRequestDto));
+    public void register(@RequestBody @Valid RegistrationRequestDto registrationRequestDto) {
+        authService.register(registrationRequestDto);
     }
 }

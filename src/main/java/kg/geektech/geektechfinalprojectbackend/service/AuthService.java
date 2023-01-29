@@ -7,5 +7,5 @@ import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationRequ
 public interface AuthService {
     AuthResponseDto login(AuthenticationRequestDto authenticationRequestDto);
 
-    AuthResponseDto register(RegistrationRequestDto registrationRequestDto);
+    void register(RegistrationRequestDto registrationRequestDto);
 }

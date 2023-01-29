@@ -1,12 +1,14 @@
 package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import kg.geektech.geektechfinalprojectbackend.config.security.JwtService;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthResponseDto;
 import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationRequestDto;
 import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationRequestDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthResponseDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.repository.UserRepository;
 import kg.geektech.geektechfinalprojectbackend.service.AuthService;
+import kg.geektech.geektechfinalprojectbackend.util.CommonUtil;
+import kg.geektech.geektechfinalprojectbackend.util.MailSenderUtil;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +21,26 @@ import org.springframework.stereotype.Service;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthServiceImpl implements AuthService {
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+    final UserRepository userRepository;
+    final JwtService jwtService;
+    final PasswordEncoder passwordEncoder;
+    final AuthenticationManager authenticationManager;
+    final MailSenderUtil mailSenderUtil;
+    final CommonUtil commonUtil;
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
                            JwtService jwtService,
                            PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager) {
+                           AuthenticationManager authenticationManager,
+                           MailSenderUtil mailSenderUtil,
+                           CommonUtil commonUtil) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.mailSenderUtil = mailSenderUtil;
+        this.commonUtil = commonUtil;
     }
 
     @Override
@@ -44,29 +52,42 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        return getToken((User) authenticate.getPrincipal());
+        User user = (User) authenticate.getPrincipal();
+
+        return AuthResponseDto.builder()
+                .token(jwtService.generateToken(user))
+                .role(user.getRole())
+                .build();
     }
 
     @Override
-    public AuthResponseDto register(RegistrationRequestDto registrationRequestDto) {
-        User user = User.builder()
-                .pin(registrationRequestDto.getPin())
-                .fullName(registrationRequestDto.getFullName())
-                .email(registrationRequestDto.getEmail())
-                .password(passwordEncoder.encode(registrationRequestDto.getPassword()))
-                .role(
-                        registrationRequestDto.getFullName().equalsIgnoreCase("admin") ?
-                                User.Role.ADMIN :
-                                User.Role.USER
-                )
-                .build();
+    public void register(RegistrationRequestDto registrationRequestDto) {
+        User user = userRepository.save(
+                User.builder()
+                        .pin(registrationRequestDto.getPin())
+                        .fullName(registrationRequestDto.getFullName())
+                        .email(registrationRequestDto.getEmail())
+                        .password(passwordEncoder.encode(registrationRequestDto.getPassword()))
+                        .role(
+                                registrationRequestDto.getFullName().equalsIgnoreCase("admin") ?
+                                        User.Role.ADMIN :
+                                        User.Role.USER
+                        )
+                        .enabled(false)
+                        .build()
+        );
 
-        return getToken(userRepository.save(user));
+        sendConfirmToEmail(
+                user.getEmail(),
+                jwtService.generateToken(user)
+        );
     }
 
-    private AuthResponseDto getToken(User user) {
-        return AuthResponseDto.builder()
-                .token(jwtService.generateToken(user))
-                .build();
+    private void sendConfirmToEmail(String email, String token) {
+        mailSenderUtil.send(
+                email,
+                "Подтверждение почты",
+                commonUtil.buildConfirmEmailText(token)
+        );
     }
 }

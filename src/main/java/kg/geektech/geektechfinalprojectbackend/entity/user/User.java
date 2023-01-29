@@ -48,6 +48,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "role")
     Role role;
 
+    @NotNull
+    @Column(name = "is_enabled")
+    boolean enabled;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.getName()));
@@ -75,7 +79,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Getter

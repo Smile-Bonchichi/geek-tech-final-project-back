@@ -6,7 +6,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-public class TimeHelper {
+public class TimeHelperUtil {
     public static final String DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";
     public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String DATE_FORMAT_V2 = "yyyy-MM-dd";
@@ -20,14 +20,18 @@ public class TimeHelper {
     public static final DateTimeFormatter DATE_STRING_FORMATTER = DateTimeFormatter.ofPattern(DATE_STRING);
 
     public static Date convertToDateViaInstant(LocalDate dateToConvert) {
-        return Date.from(dateToConvert.atStartOfDay()
-                .atZone(ZoneId.systemDefault())
-                .toInstant());
+        return Date.from(
+                dateToConvert.atStartOfDay()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant()
+        );
     }
 
     public static Date convertToDateViaInstant(LocalDateTime dateToConvert) {
         return Date
-                .from(dateToConvert.atZone(ZoneId.systemDefault())
-                        .toInstant());
+                .from(
+                        dateToConvert.atZone(ZoneId.systemDefault())
+                                .toInstant()
+                );
     }
 }

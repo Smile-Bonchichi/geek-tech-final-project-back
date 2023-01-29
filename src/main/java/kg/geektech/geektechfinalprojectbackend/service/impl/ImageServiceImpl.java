@@ -4,7 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
-import kg.geektech.geektechfinalprojectbackend.exception.ImageLoadException;
+import kg.geektech.geektechfinalprojectbackend.exception.image.ImageLoadException;
 import kg.geektech.geektechfinalprojectbackend.repository.ImageRepository;
 import kg.geektech.geektechfinalprojectbackend.service.ImageService;
 import lombok.AccessLevel;

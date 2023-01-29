@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springdoc.core.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +17,8 @@ import java.util.List;
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SwaggerConfig {
+    @Value("${custom.project.name}")
+    String projectName;
     final String VERSION = "1.0.0";
 
     @Bean
@@ -42,7 +45,7 @@ public class SwaggerConfig {
     private Info apiEndPointsInformation() {
         return new Info()
                 .title("GeekTech final project")
-                .description("Онлайн доставка")
+                .description(projectName)
                 .contact(
                         new Contact()
                                 .name("Ulanov Nurdin")

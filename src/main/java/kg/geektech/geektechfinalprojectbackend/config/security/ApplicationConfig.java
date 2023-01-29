@@ -1,6 +1,8 @@
 package kg.geektech.geektechfinalprojectbackend.config.security;
 
 import kg.geektech.geektechfinalprojectbackend.repository.UserRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicationConfig {
-    private final UserRepository repository;
+    final UserRepository repository;
 
     @Autowired
     public ApplicationConfig(UserRepository repository) {

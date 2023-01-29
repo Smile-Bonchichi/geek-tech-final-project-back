@@ -1,7 +1,7 @@
 package kg.geektech.geektechfinalprojectbackend.entity;
 
 import jakarta.persistence.*;
-import kg.geektech.geektechfinalprojectbackend.util.TimeHelper;
+import kg.geektech.geektechfinalprojectbackend.util.TimeHelperUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,11 +21,11 @@ public class BaseEntity implements Serializable {
     Long id;
 
     @Column(name = "created_at")
-    @DateTimeFormat(pattern = TimeHelper.DATE_TIME_FORMAT)
+    @DateTimeFormat(pattern = TimeHelperUtil.DATE_TIME_FORMAT)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @DateTimeFormat(pattern = TimeHelper.DATE_TIME_FORMAT)
+    @DateTimeFormat(pattern = TimeHelperUtil.DATE_TIME_FORMAT)
     private LocalDateTime updatedAt;
 
     @PrePersist
