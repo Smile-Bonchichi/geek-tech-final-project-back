@@ -1,8 +1,8 @@
 package kg.geektech.geektechfinalprojectbackend.controller;
 
 import jakarta.validation.Valid;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.AuthenticationRequestDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.RegistrationRequestDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationRequestDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationRequestDto;
 import kg.geektech.geektechfinalprojectbackend.service.AuthService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -25,13 +25,13 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequestDto authenticationRequestDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequestDto authenticationRequestDto) {
         return ResponseEntity
                 .ok(authService.login(authenticationRequestDto));
     }
 
     @PostMapping("/sign-up")
-    ResponseEntity<?> register(@RequestBody @Valid RegistrationRequestDto registrationRequestDto) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegistrationRequestDto registrationRequestDto) {
         return ResponseEntity
                 .ok(authService.register(registrationRequestDto));
     }

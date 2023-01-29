@@ -1,9 +1,9 @@
 package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import kg.geektech.geektechfinalprojectbackend.config.security.JwtService;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.AuthResponseDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.AuthenticationRequestDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.RegistrationRequestDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthResponseDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationRequestDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationRequestDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.repository.UserRepository;
 import kg.geektech.geektechfinalprojectbackend.service.AuthService;
