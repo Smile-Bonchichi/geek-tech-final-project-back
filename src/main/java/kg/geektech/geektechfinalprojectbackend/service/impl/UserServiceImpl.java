@@ -1,6 +1,6 @@
 package kg.geektech.geektechfinalprojectbackend.service.impl;
 
-import kg.geektech.geektechfinalprojectbackend.dto.user.request.UpdateUserDto;
+import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.mapper.UserMapper;
 import kg.geektech.geektechfinalprojectbackend.repository.UserRepository;
@@ -41,5 +41,10 @@ public class UserServiceImpl implements UserService {
                                 .setPassword(updateUserDto.getPassword() != null ? passwordEncoder.encode(updateUserDto.getPassword()) : user.getPassword())
                 )
         );
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }

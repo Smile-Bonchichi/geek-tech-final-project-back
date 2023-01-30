@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Schema(name = "Модель данных регистрации")
 public class RegistrationDto extends BaseRequest {
     @NotNull
+    @Pattern(regexp = "^[12][0-9]{13}$")
     @Size(min = 14, max = 14, message = "ПИН должен быть 14 символов")
     @Schema(description = "ПИН", example = "22212200001155")
     String pin;
@@ -28,7 +29,7 @@ public class RegistrationDto extends BaseRequest {
     @Schema(description = "ФИО", example = "Уланов Нурдин")
     String fullName;
     @NotNull
-    @Pattern(regexp = "")
+    @Pattern(regexp = "^\\+996[0-9]{9}$")
     @Size(min = 13, max = 13, message = "Введите корректный номер телефона")
     @Schema(description = "Номер телефона", example = "+996779977288")
     String phoneNumber;

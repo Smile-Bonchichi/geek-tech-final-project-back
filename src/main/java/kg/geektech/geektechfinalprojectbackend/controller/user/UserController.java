@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
-import kg.geektech.geektechfinalprojectbackend.dto.user.request.UpdateUserDto;
+import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.service.UserService;
 import lombok.AccessLevel;
@@ -91,5 +91,30 @@ public class UserController {
                                         @AuthenticationPrincipal User user) {
         return ResponseEntity
                 .ok(userService.updateUserInfo(updateUserDto, user));
+    }
+
+    @DeleteMapping
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не коректные данные",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на сервере",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    })
+    })
+    public void deleteUser(@AuthenticationPrincipal User user) {
+        userService.deleteUser(user);
     }
 }
