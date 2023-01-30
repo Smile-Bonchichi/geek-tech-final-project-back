@@ -2,7 +2,7 @@ package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import kg.geektech.geektechfinalprojectbackend.dto.category.CategoryDto;
 import kg.geektech.geektechfinalprojectbackend.entity.category.Category;
-import kg.geektech.geektechfinalprojectbackend.exception.category.CategoryNotFoundException;
+import kg.geektech.geektechfinalprojectbackend.exception.common.NotFoundException;
 import kg.geektech.geektechfinalprojectbackend.mapper.CategoryMapper;
 import kg.geektech.geektechfinalprojectbackend.repository.CategoryRepository;
 import kg.geektech.geektechfinalprojectbackend.service.CategoryService;
@@ -75,6 +75,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     private Category getById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Такой категории нет", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new NotFoundException("Такой категории нет", HttpStatus.BAD_REQUEST));
     }
 }

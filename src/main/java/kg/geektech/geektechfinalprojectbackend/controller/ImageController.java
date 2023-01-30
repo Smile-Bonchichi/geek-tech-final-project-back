@@ -35,7 +35,7 @@ public class ImageController {
     }
 
     @PostMapping
-    @Operation(summary = "Загрузка изображения", method = "POST")
+    @Operation(summary = "Загрузка", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -82,11 +82,11 @@ public class ImageController {
     }
 
     @GetMapping
-    @Operation(summary = "Получить все изображения по токену", method = "GET")
+    @Operation(summary = "Получить всё по токену", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение изображений",
+                    description = "Успешное получение",
                     content = {
                             @Content(
                                     mediaType = "application/json",
