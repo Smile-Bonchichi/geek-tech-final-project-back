@@ -20,7 +20,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void confirm(User user) {
-        user.setEnabled(true);
-        userRepository.save(user);
+        userRepository.save(user.setEnabled(true));
     }
 }
