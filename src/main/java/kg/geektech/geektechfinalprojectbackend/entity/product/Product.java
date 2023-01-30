@@ -6,6 +6,7 @@ import kg.geektech.geektechfinalprojectbackend.entity.BaseEntity;
 import kg.geektech.geektechfinalprojectbackend.entity.category.Category;
 import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product extends BaseEntity {
     @NotNull
@@ -29,6 +31,9 @@ public class Product extends BaseEntity {
     @NotNull
     @Column(name = "price")
     BigDecimal price;
+    @NotNull
+    @Column(name = "is_present")
+    Boolean isPresent;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(

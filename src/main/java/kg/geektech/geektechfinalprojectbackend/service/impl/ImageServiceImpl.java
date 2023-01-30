@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,41 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ImageDto loadImage(MultipartFile image, Image.ImageType type, User user) {
+        Map upload = loadCloudinary(image);
+
+        return ImageMapper.INSTANCE.imageToImageResponseDto(
+                imageRepository.save(
+                        Image.builder()
+                                .type(type)
+                                .url((String) upload.get("url"))
+                                .user(user)
+                                .build()
+                )
+        );
+    }
+
+    @Override
+    public List<Image> loadImages(List<MultipartFile> images, Image.ImageType type, User user) {
+        List<Image> imageList = new ArrayList<>();
+
+        for (int i = 0; i < images.size(); i++) {
+            Map upload = loadCloudinary(images.get(i));
+
+            imageList.add(
+                    imageRepository.save(
+                            Image.builder()
+                                    .type(type)
+                                    .url((String) upload.get("url"))
+                                    .user(user)
+                                    .build()
+                    )
+            );
+        }
+
+        return imageList;
+    }
+
+    private Map loadCloudinary(MultipartFile image) {
         try {
             File file = Files.createTempFile(
                             String.valueOf(System.currentTimeMillis()),
@@ -46,17 +82,7 @@ public class ImageServiceImpl implements ImageService {
 
             image.transferTo(file);
 
-            Map upload = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-
-            return ImageMapper.INSTANCE.imageToImageResponseDto(
-                    imageRepository.save(
-                            Image.builder()
-                                    .type(type)
-                                    .url((String) upload.get("url"))
-                                    .user(user)
-                                    .build()
-                    )
-            );
+            return cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         } catch (IOException e) {
             throw new ImageLoadException("Не удалось загрузить фотографию", HttpStatus.INTERNAL_SERVER_ERROR);
         }

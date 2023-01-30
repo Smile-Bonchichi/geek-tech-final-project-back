@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(name = "Модель данных ответа")
 public abstract class BaseResponse {
     @Schema(description = "Сообщение", example = "Описание ошибки на сервере")
     String message;

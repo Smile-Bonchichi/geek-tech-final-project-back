@@ -21,6 +21,6 @@ public class CategoryDto extends BaseRequest {
     Long id;
     @NotNull
     @Size(min = 2, message = "Название должно быть более 2 символов")
-    @Schema(description = "Название", example = "Суп")
+    @Schema(description = "Название", example = "Жидкое")
     String name;
 }

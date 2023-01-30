@@ -11,8 +11,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Schema(name = "Модель данных избранного продукта")
-public class FavoriteProductDto extends BaseResponse {
+@Schema(name = "Модель данных CRUD продукта")
+public class ProductDto extends BaseResponse {
     @Schema(description = "Название продукта", example = "Суп")
     String name;
 }

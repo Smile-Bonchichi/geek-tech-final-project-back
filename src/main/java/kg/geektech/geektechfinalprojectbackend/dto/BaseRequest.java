@@ -1,5 +1,6 @@
 package kg.geektech.geektechfinalprojectbackend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(name = "Модель данных запроса")
 public abstract class BaseRequest {
 
 }

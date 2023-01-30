@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(name = "Модель данных токена авторизации")
 public class AuthDto extends BaseResponse {
     @Schema(description = "Токен", example = "eyJhbGciOiJIUzI1NiJ9...")
     String token;
