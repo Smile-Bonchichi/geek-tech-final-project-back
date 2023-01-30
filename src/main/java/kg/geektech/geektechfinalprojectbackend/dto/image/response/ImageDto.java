@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(name = "Модель данных изображений")
 public class ImageDto extends BaseResponse {
     @Schema(description = "Ссылка на изображение", example = "https://res.cloudinary.com/...")
     String url;

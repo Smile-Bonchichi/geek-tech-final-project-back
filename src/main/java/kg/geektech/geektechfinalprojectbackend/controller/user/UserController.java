@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
+import kg.geektech.geektechfinalprojectbackend.dto.card.request.AddCardDto;
+import kg.geektech.geektechfinalprojectbackend.dto.card.response.CardDto;
 import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.service.UserService;
@@ -54,6 +56,43 @@ public class UserController {
     })
     public void confirmEmail(@AuthenticationPrincipal User user) {
         userService.confirm(user);
+    }
+
+    @PostMapping("/add-card")
+    @Operation(summary = "Добавление карты", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное добавление",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CardDto.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не коректные данные",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на сервере",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    })
+    })
+    public ResponseEntity<?> putCard(@RequestBody @Valid AddCardDto addCardDto,
+                                     @AuthenticationPrincipal User user) {
+        return ResponseEntity
+                .ok(userService.putCard(addCardDto, user));
     }
 
     @PutMapping

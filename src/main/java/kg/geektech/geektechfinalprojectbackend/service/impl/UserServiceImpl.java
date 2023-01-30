@@ -1,8 +1,12 @@
 package kg.geektech.geektechfinalprojectbackend.service.impl;
 
+import kg.geektech.geektechfinalprojectbackend.dto.card.request.AddCardDto;
+import kg.geektech.geektechfinalprojectbackend.dto.card.response.CardDto;
 import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
+import kg.geektech.geektechfinalprojectbackend.entity.card.UserCard;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.mapper.UserMapper;
+import kg.geektech.geektechfinalprojectbackend.repository.UserCardRepository;
 import kg.geektech.geektechfinalprojectbackend.repository.UserRepository;
 import kg.geektech.geektechfinalprojectbackend.service.UserService;
 import lombok.AccessLevel;
@@ -15,18 +19,33 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
+    final UserCardRepository userCardRepository;
     final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
+                           UserCardRepository userCardRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.userCardRepository = userCardRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void confirm(User user) {
         userRepository.save(user.setEnabled(true));
+    }
+
+    @Override
+    public CardDto putCard(AddCardDto addCardDto, User user) {
+        return UserMapper.INSTANCE.userCardToCardDto(
+                userCardRepository.save(
+                        UserCard.builder()
+                                .cardNumber(addCardDto.getCardNumber())
+                                .user(user)
+                                .build()
+                )
+        );
     }
 
     @Override

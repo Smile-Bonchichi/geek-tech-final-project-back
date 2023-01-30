@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(name = "Модель данных обновления пользователя")
 public class UpdateUserDto extends BaseRequest {
     @Pattern(regexp = "^[12][0-9]{13}$")
     @Size(min = 14, max = 14, message = "ПИН должен быть 14 символов")
