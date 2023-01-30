@@ -2,9 +2,11 @@ package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import kg.geektech.geektechfinalprojectbackend.dto.image.response.ImageResponseDto;
 import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.exception.image.ImageLoadException;
+import kg.geektech.geektechfinalprojectbackend.mapper.ImageMapper;
 import kg.geektech.geektechfinalprojectbackend.repository.ImageRepository;
 import kg.geektech.geektechfinalprojectbackend.service.ImageService;
 import lombok.AccessLevel;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -33,7 +36,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String loadImage(MultipartFile image, Image.ImageType type, User user) {
+    public ImageResponseDto loadImage(MultipartFile image, Image.ImageType type, User user) {
         try {
             File file = Files.createTempFile(
                             String.valueOf(System.currentTimeMillis()),
@@ -45,15 +48,24 @@ public class ImageServiceImpl implements ImageService {
 
             Map upload = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
 
-            return imageRepository.save(
-                    Image.builder()
-                            .type(type)
-                            .url((String) upload.get("url"))
-                            .user(user)
-                            .build()
-            ).getUrl();
+            return ImageMapper.INSTANCE.imageToImageResponseDto(
+                    imageRepository.save(
+                            Image.builder()
+                                    .type(type)
+                                    .url((String) upload.get("url"))
+                                    .user(user)
+                                    .build()
+                    )
+            );
         } catch (IOException e) {
             throw new ImageLoadException("Не удалось загрузить фотографию", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public List<ImageResponseDto> getAllImages(Image.ImageType type, User user) {
+        return ImageMapper.INSTANCE.imagesToImageResponseDtos(
+                imageRepository.findAllByTypeAndUser(type, user)
+        );
     }
 }

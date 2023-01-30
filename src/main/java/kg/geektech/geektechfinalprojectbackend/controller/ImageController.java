@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -37,7 +34,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping
     @Operation(summary = "Загрузка изображения", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(
@@ -82,5 +79,45 @@ public class ImageController {
                                   @AuthenticationPrincipal User user) {
         return ResponseEntity
                 .ok(imageService.loadImage(image, type, user));
+    }
+
+    @GetMapping
+    @Operation(summary = "Получить все изображения по токену", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное получение изображений",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(example = "Ссылка на изображение")
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не коректные данные",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на сервере",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    })
+    })
+    public ResponseEntity<?> getAll(@RequestParam(name = "type")
+                                    @Valid
+                                    @NotNull
+                                    @Parameter(description = "Тип изображения") Image.ImageType type,
+                                    @AuthenticationPrincipal User user) {
+        return ResponseEntity
+                .ok(imageService.getAllImages(type, user));
     }
 }
