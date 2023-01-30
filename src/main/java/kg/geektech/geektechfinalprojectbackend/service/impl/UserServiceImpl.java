@@ -3,6 +3,7 @@ package kg.geektech.geektechfinalprojectbackend.service.impl;
 import kg.geektech.geektechfinalprojectbackend.dto.card.request.AddCardDto;
 import kg.geektech.geektechfinalprojectbackend.dto.card.response.CardDto;
 import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
+import kg.geektech.geektechfinalprojectbackend.dto.user.response.UserDto;
 import kg.geektech.geektechfinalprojectbackend.entity.card.UserCard;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.mapper.UserMapper;
@@ -46,6 +47,11 @@ public class UserServiceImpl implements UserService {
                                 .build()
                 )
         );
+    }
+
+    @Override
+    public UserDto getUserInfo(User user) {
+        return UserMapper.INSTANCE.userToUserDto(user);
     }
 
     @Override

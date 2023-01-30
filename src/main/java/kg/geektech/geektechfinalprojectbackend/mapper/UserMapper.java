@@ -2,6 +2,7 @@ package kg.geektech.geektechfinalprojectbackend.mapper;
 
 import kg.geektech.geektechfinalprojectbackend.dto.card.response.CardDto;
 import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
+import kg.geektech.geektechfinalprojectbackend.dto.user.response.UserDto;
 import kg.geektech.geektechfinalprojectbackend.entity.card.UserCard;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import org.mapstruct.Mapper;
@@ -14,4 +15,6 @@ public interface UserMapper {
     UpdateUserDto userToUpdateUserDto(User user);
 
     CardDto userCardToCardDto(UserCard userCard);
+
+    UserDto userToUserDto(User user);
 }

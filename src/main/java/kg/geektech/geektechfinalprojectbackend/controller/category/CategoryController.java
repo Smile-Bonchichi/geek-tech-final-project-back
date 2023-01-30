@@ -1,4 +1,4 @@
-package kg.geektech.geektechfinalprojectbackend.controller.user;
+package kg.geektech.geektechfinalprojectbackend.controller.category;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,66 +8,36 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
-import kg.geektech.geektechfinalprojectbackend.dto.card.request.AddCardDto;
-import kg.geektech.geektechfinalprojectbackend.dto.card.response.CardDto;
-import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
-import kg.geektech.geektechfinalprojectbackend.entity.user.User;
-import kg.geektech.geektechfinalprojectbackend.service.UserService;
+import kg.geektech.geektechfinalprojectbackend.dto.category.CategoryDto;
+import kg.geektech.geektechfinalprojectbackend.service.CategoryService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Tag(name = "Пользователь")
-public class UserController {
-    final UserService userService;
+@Tag(name = "Категория")
+public class CategoryController {
+    final CategoryService categoryService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
-    @GetMapping("/confirm")
-    @Operation(summary = "Подтверждение почты", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
-    public void confirmEmail(@AuthenticationPrincipal User user) {
-        userService.confirm(user);
-    }
-
-    @PostMapping("/add-card")
-    @Operation(summary = "Добавление карты", method = "PUT")
+    @PostMapping
+    @Operation(summary = "Создание", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное добавление",
+                    description = "Успешное создание",
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CardDto.class)
+                                    schema = @Schema(implementation = CategoryDto.class)
                             )
                     }),
             @ApiResponse(
@@ -89,22 +59,21 @@ public class UserController {
                             )
                     })
     })
-    public ResponseEntity<?> putCard(@RequestBody @Valid AddCardDto addCardDto,
-                                     @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> create(@RequestBody @Valid CategoryDto categoryDto) {
         return ResponseEntity
-                .ok(userService.putCard(addCardDto, user));
+                .ok(categoryService.create(categoryDto));
     }
 
     @GetMapping
-    @Operation(summary = "Получение информации", method = "PUT")
+    @Operation(summary = "Получение по ID", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение информации",
+                    description = "Успешное получение по ID",
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CardDto.class)
+                                    schema = @Schema(implementation = CategoryDto.class)
                             )
                     }),
             @ApiResponse(
@@ -126,21 +95,21 @@ public class UserController {
                             )
                     })
     })
-    public ResponseEntity<?> get(@AuthenticationPrincipal User user) {
+    public ResponseEntity<?> getById(@RequestBody @Valid CategoryDto categoryDto) {
         return ResponseEntity
-                .ok(userService.getUserInfo(user));
+                .ok(categoryService.findById(categoryDto));
     }
 
     @PutMapping
-    @Operation(summary = "Обновление профиля", method = "PUT")
+    @Operation(summary = "Изменение по ID", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное обновление",
+                    description = "Успешное изменение по ID",
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = UpdateUserDto.class)
+                                    schema = @Schema(implementation = CategoryDto.class)
                             )
                     }),
             @ApiResponse(
@@ -162,15 +131,23 @@ public class UserController {
                             )
                     })
     })
-    public ResponseEntity<?> updateUser(@RequestBody @Valid UpdateUserDto updateUserDto,
-                                        @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> change(@RequestBody @Valid CategoryDto categoryDto) {
         return ResponseEntity
-                .ok(userService.updateUserInfo(updateUserDto, user));
+                .ok(categoryService.change(categoryDto));
     }
 
     @DeleteMapping
-    @Operation(summary = "Удаление", method = "DELETE")
+    @Operation(summary = "Удаление по ID", method = "DELETE")
     @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное удаление по ID",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CategoryDto.class)
+                            )
+                    }),
             @ApiResponse(
                     responseCode = "400",
                     description = "Не коректные данные",
@@ -190,7 +167,44 @@ public class UserController {
                             )
                     })
     })
-    public void deleteUser(@AuthenticationPrincipal User user) {
-        userService.deleteUser(user);
+    public ResponseEntity<?> delete(@RequestBody @Valid CategoryDto categoryDto) {
+        return ResponseEntity
+                .ok(categoryService.delete(categoryDto));
+    }
+
+    @GetMapping("get-all")
+    @Operation(summary = "Получение всех", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное получение всех",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CategoryDto.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не коректные данные",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на сервере",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    })
+    })
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity
+                .ok(categoryService.getAll());
     }
 }

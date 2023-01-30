@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.geektechfinalprojectbackend.entity.BaseEntity;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 @Getter
@@ -15,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "categories")
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity {
     @NotNull
