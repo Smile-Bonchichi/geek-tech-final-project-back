@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationRequestDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationRequestDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthResponseDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthDto;
 import kg.geektech.geektechfinalprojectbackend.service.AuthService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -42,7 +42,7 @@ public class AuthController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthResponseDto.class)
+                                    schema = @Schema(implementation = AuthDto.class)
                             )
                     }),
             @ApiResponse(
@@ -64,9 +64,9 @@ public class AuthController {
                             )
                     })
     })
-    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequestDto authenticationRequestDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDto authenticationDto) {
         return ResponseEntity
-                .ok(authService.login(authenticationRequestDto));
+                .ok(authService.login(authenticationDto));
     }
 
     @PostMapping("/sign-up")
@@ -91,7 +91,7 @@ public class AuthController {
                             )
                     })
     })
-    public void register(@RequestBody @Valid RegistrationRequestDto registrationRequestDto) {
-        authService.register(registrationRequestDto);
+    public void register(@RequestBody @Valid RegistrationDto registrationDto) {
+        authService.register(registrationDto);
     }
 }

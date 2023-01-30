@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ImageResponseDto extends BaseResponse {
+public class ImageDto extends BaseResponse {
     String url;
 }

@@ -1,11 +1,11 @@
 package kg.geektech.geektechfinalprojectbackend.service;
 
-import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthResponseDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationRequestDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationRequestDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationDto;
 
 public interface AuthService {
-    AuthResponseDto login(AuthenticationRequestDto authenticationRequestDto);
+    AuthDto login(AuthenticationDto authenticationDto);
 
-    void register(RegistrationRequestDto registrationRequestDto);
+    void register(RegistrationDto registrationDto);
 }

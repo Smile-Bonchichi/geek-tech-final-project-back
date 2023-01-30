@@ -36,6 +36,11 @@ public class User extends BaseEntity implements UserDetails {
     String fullName;
 
     @NotNull
+    @Size(min = 2, message = "Введите корректный номер телефона")
+    @Column(name = "phone_number")
+    String phoneNumber;
+
+    @NotNull
     @Email(message = "Введите корректный email")
     @Column(name = "email")
     String email;

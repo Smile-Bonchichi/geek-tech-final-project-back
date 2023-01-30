@@ -1,9 +1,9 @@
 package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import kg.geektech.geektechfinalprojectbackend.config.security.JwtService;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationRequestDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationRequestDto;
-import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthResponseDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationDto;
+import kg.geektech.geektechfinalprojectbackend.dto.auth.response.AuthDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.repository.UserRepository;
 import kg.geektech.geektechfinalprojectbackend.service.AuthService;
@@ -44,32 +44,33 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDto login(AuthenticationRequestDto authenticationRequestDto) {
+    public AuthDto login(AuthenticationDto authenticationDto) {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authenticationRequestDto.getEmail(),
-                        authenticationRequestDto.getPassword()
+                        authenticationDto.getEmail(),
+                        authenticationDto.getPassword()
                 )
         );
 
         User user = (User) authenticate.getPrincipal();
 
-        return AuthResponseDto.builder()
+        return AuthDto.builder()
                 .token(jwtService.generateToken(user))
                 .role(user.getRole())
                 .build();
     }
 
     @Override
-    public void register(RegistrationRequestDto registrationRequestDto) {
+    public void register(RegistrationDto registrationDto) {
         User user = userRepository.save(
                 User.builder()
-                        .pin(registrationRequestDto.getPin())
-                        .fullName(registrationRequestDto.getFullName())
-                        .email(registrationRequestDto.getEmail())
-                        .password(passwordEncoder.encode(registrationRequestDto.getPassword()))
+                        .pin(registrationDto.getPin())
+                        .fullName(registrationDto.getFullName())
+                        .email(registrationDto.getEmail())
+                        .phoneNumber(registrationDto.getPhoneNumber())
+                        .password(passwordEncoder.encode(registrationDto.getPassword()))
                         .role(
-                                registrationRequestDto.getFullName().equalsIgnoreCase("admin") ?
+                                registrationDto.getFullName().equalsIgnoreCase("admin") ?
                                         User.Role.ADMIN :
                                         User.Role.USER
                         )

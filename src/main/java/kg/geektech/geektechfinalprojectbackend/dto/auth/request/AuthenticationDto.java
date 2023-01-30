@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(name = "Модель данных авторизации")
-public class AuthenticationRequestDto extends BaseRequest {
+public class AuthenticationDto extends BaseRequest {
     @NotNull
     @NotEmpty(message = "Email не должен быть пустым")
     @Email(message = "Введите корректный email")

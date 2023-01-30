@@ -2,7 +2,7 @@ package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import kg.geektech.geektechfinalprojectbackend.dto.image.response.ImageResponseDto;
+import kg.geektech.geektechfinalprojectbackend.dto.image.response.ImageDto;
 import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.exception.image.ImageLoadException;
@@ -36,7 +36,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public ImageResponseDto loadImage(MultipartFile image, Image.ImageType type, User user) {
+    public ImageDto loadImage(MultipartFile image, Image.ImageType type, User user) {
         try {
             File file = Files.createTempFile(
                             String.valueOf(System.currentTimeMillis()),
@@ -63,7 +63,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<ImageResponseDto> getAllImages(Image.ImageType type, User user) {
+    public List<ImageDto> getAllImages(Image.ImageType type, User user) {
         return ImageMapper.INSTANCE.imagesToImageResponseDtos(
                 imageRepository.findAllByTypeAndUser(type, user)
         );
