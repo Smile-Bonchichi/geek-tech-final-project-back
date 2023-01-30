@@ -11,6 +11,7 @@ import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import kg.geektech.geektechfinalprojectbackend.dto.card.request.AddCardDto;
 import kg.geektech.geektechfinalprojectbackend.dto.card.response.CardDto;
 import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
+import kg.geektech.geektechfinalprojectbackend.dto.user.response.UserDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.service.UserService;
 import lombok.AccessLevel;
@@ -104,7 +105,7 @@ public class UserController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CardDto.class)
+                                    schema = @Schema(implementation = UserDto.class)
                             )
                     }),
             @ApiResponse(

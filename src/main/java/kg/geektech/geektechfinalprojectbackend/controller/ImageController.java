@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
+import kg.geektech.geektechfinalprojectbackend.dto.image.response.ImageDto;
 import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.service.ImageService;
@@ -43,7 +44,7 @@ public class ImageController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(example = "Ссылка на изображение")
+                                    schema = @Schema(implementation = ImageDto.class)
                             )
                     }),
             @ApiResponse(
@@ -90,7 +91,7 @@ public class ImageController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(example = "Ссылка на изображение")
+                                    schema = @Schema(implementation = ImageDto.class)
                             )
                     }),
             @ApiResponse(
