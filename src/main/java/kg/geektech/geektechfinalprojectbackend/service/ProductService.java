@@ -5,6 +5,7 @@ import kg.geektech.geektechfinalprojectbackend.dto.product.request.ChangeProduct
 import kg.geektech.geektechfinalprojectbackend.dto.product.response.FavoriteProductDto;
 import kg.geektech.geektechfinalprojectbackend.dto.product.response.ProductDto;
 import kg.geektech.geektechfinalprojectbackend.dto.product.response.ProductInfoDto;
+import kg.geektech.geektechfinalprojectbackend.entity.product.Product;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public interface ProductService {
 
     List<ProductInfoDto> getAll();
 
+    Product getById(Long id);
+
     FavoriteProductDto favorite(Long id, User user);
+
     FavoriteProductDto deleteFavorite(Long id, User user);
 }

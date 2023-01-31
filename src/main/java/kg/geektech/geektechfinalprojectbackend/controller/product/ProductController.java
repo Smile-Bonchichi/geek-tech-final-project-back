@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import kg.geektech.geektechfinalprojectbackend.controller.BaseController;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import kg.geektech.geektechfinalprojectbackend.dto.product.request.AddProductDto;
 import kg.geektech.geektechfinalprojectbackend.dto.product.request.ChangeProductDto;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/product")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Продукты")
-public class ProductController {
+public class ProductController extends BaseController {
     final ProductService productService;
 
     @Autowired
@@ -69,8 +70,9 @@ public class ProductController {
     })
     public ResponseEntity<?> put(@RequestBody @Valid AddProductDto addProductDto,
                                  @AuthenticationPrincipal User user) {
-        return ResponseEntity
-                .ok(productService.put(addProductDto, user));
+        return constructSuccessResponse(
+                productService.put(addProductDto, user)
+        );
     }
 
     @PutMapping
@@ -106,8 +108,9 @@ public class ProductController {
     })
     public ResponseEntity<?> change(@RequestBody @Valid ChangeProductDto changeProductDto,
                                     @AuthenticationPrincipal User user) {
-        return ResponseEntity
-                .ok(productService.change(changeProductDto, user));
+        return constructSuccessResponse(
+                productService.change(changeProductDto, user)
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -146,8 +149,9 @@ public class ProductController {
                                     @NotNull @Min(1)
                                     @Schema(description = "ID продукта")
                                     Long id) {
-        return ResponseEntity
-                .ok(productService.delete(id));
+        return constructSuccessResponse(
+                productService.delete(id)
+        );
     }
 
     @GetMapping
@@ -182,8 +186,9 @@ public class ProductController {
                     })
     })
     public ResponseEntity<?> getAll() {
-        return ResponseEntity
-                .ok(productService.getAll());
+        return constructSuccessResponse(
+                productService.getAll()
+        );
     }
 
     @PostMapping("/favorite/{id}")
@@ -223,8 +228,9 @@ public class ProductController {
                                          @Schema(description = "ID продукта")
                                          Long id,
                                          @AuthenticationPrincipal User user) {
-        return ResponseEntity
-                .ok(productService.favorite(id, user));
+        return constructSuccessResponse(
+                productService.favorite(id, user)
+        );
     }
 
     @DeleteMapping("/favorite/{id}")
@@ -264,7 +270,8 @@ public class ProductController {
                                             @Schema(description = "ID продукта")
                                             Long id,
                                             @AuthenticationPrincipal User user) {
-        return ResponseEntity
-                .ok(productService.deleteFavorite(id, user));
+        return constructSuccessResponse(
+                productService.deleteFavorite(id, user)
+        );
     }
 }

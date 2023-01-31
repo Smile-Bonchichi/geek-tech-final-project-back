@@ -1,9 +1,8 @@
 package kg.geektech.geektechfinalprojectbackend.dto.product.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import kg.geektech.geektechfinalprojectbackend.dto.category.CategoryDto;
-import kg.geektech.geektechfinalprojectbackend.dto.image.response.ImageDto;
+import kg.geektech.geektechfinalprojectbackend.dto.image.ImageDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,10 +13,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(name = "Модель данных продукта")
-public class ProductInfoDto extends BaseResponse {
+public class ProductInfoDto {
     @Schema(description = "Название продукта", example = "Суп")
     String name;
     @Schema(description = "Описание продукта", example = "Вкусный, сытный, супер суп")

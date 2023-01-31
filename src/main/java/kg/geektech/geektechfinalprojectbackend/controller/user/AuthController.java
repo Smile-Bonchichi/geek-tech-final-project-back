@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kg.geektech.geektechfinalprojectbackend.controller.BaseController;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import kg.geektech.geektechfinalprojectbackend.dto.auth.request.AuthenticationDto;
 import kg.geektech.geektechfinalprojectbackend.dto.auth.request.RegistrationDto;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/auth")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Авторизация")
-public class AuthController {
+public class AuthController extends BaseController {
     final AuthService authService;
 
     @Autowired
@@ -65,8 +66,9 @@ public class AuthController {
                     })
     })
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDto authenticationDto) {
-        return ResponseEntity
-                .ok(authService.login(authenticationDto));
+        return constructSuccessResponse(
+                authService.login(authenticationDto)
+        );
     }
 
     @PostMapping("/sign-up")

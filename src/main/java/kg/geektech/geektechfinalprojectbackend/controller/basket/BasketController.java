@@ -1,4 +1,4 @@
-package kg.geektech.geektechfinalprojectbackend.controller.user;
+package kg.geektech.geektechfinalprojectbackend.controller.basket;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -7,14 +7,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import kg.geektech.geektechfinalprojectbackend.controller.BaseController;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
-import kg.geektech.geektechfinalprojectbackend.dto.card.request.AddCardDto;
-import kg.geektech.geektechfinalprojectbackend.dto.card.response.CardDto;
-import kg.geektech.geektechfinalprojectbackend.dto.user.UpdateUserDto;
-import kg.geektech.geektechfinalprojectbackend.dto.user.response.UserDto;
+import kg.geektech.geektechfinalprojectbackend.dto.basket.BasketDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
-import kg.geektech.geektechfinalprojectbackend.service.UserService;
+import kg.geektech.geektechfinalprojectbackend.service.BasketService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,45 +22,19 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/basket")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Tag(name = "Пользователь")
-public class UserController extends BaseController {
-    final UserService userService;
+@Tag(name = "Корзина")
+public class BasketController extends BaseController {
+    final BasketService basketService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public BasketController(BasketService basketService) {
+        this.basketService = basketService;
     }
 
-    @GetMapping("/confirm")
-    @Operation(summary = "Подтверждение почты", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
-    public void confirmEmail(@AuthenticationPrincipal User user) {
-        userService.confirm(user);
-    }
-
-    @PostMapping("/add-card")
-    @Operation(summary = "Добавление карты", method = "PUT")
+    @PostMapping("/{id}")
+    @Operation(summary = "Добавление продукта", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -69,7 +42,7 @@ public class UserController extends BaseController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CardDto.class)
+                                    schema = @Schema(implementation = BasketDto.class)
                             )
                     }),
             @ApiResponse(
@@ -91,23 +64,69 @@ public class UserController extends BaseController {
                             )
                     })
     })
-    public ResponseEntity<?> putCard(@RequestBody @Valid AddCardDto addCardDto,
-                                     @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> add(@PathVariable("id")
+                                 @Valid
+                                 @NotNull @Min(1)
+                                 @Schema(description = "ID продукта")
+                                 Long id,
+                                 @AuthenticationPrincipal User user) {
         return constructSuccessResponse(
-                userService.putCard(addCardDto, user)
+                basketService.put(id, user)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удаление продукта", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное удаление",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BasketDto.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не коректные данные",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на сервере",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    })
+    })
+    public ResponseEntity<?> delete(@PathVariable("id")
+                                    @Valid
+                                    @NotNull @Min(1)
+                                    @Schema(description = "ID продукта")
+                                    Long id,
+                                    @AuthenticationPrincipal User user) {
+        return constructSuccessResponse(
+                basketService.delete(id, user)
         );
     }
 
     @GetMapping
-    @Operation(summary = "Получение информации", method = "PUT")
+    @Operation(summary = "Получение", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение информации",
+                    description = "Успешное получение",
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = UserDto.class)
+                                    schema = @Schema(implementation = BasketDto.class)
                             )
                     }),
             @ApiResponse(
@@ -129,73 +148,9 @@ public class UserController extends BaseController {
                             )
                     })
     })
-    public ResponseEntity<?> get(@AuthenticationPrincipal User user) {
+    public ResponseEntity<?> getAll(@AuthenticationPrincipal User user) {
         return constructSuccessResponse(
-                userService.getUserInfo(user)
+                basketService.getAll(user)
         );
-    }
-
-    @PutMapping
-    @Operation(summary = "Обновление профиля", method = "PUT")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное обновление",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = UpdateUserDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
-    public ResponseEntity<?> updateUser(@RequestBody @Valid UpdateUserDto updateUserDto,
-                                        @AuthenticationPrincipal User user) {
-        return constructSuccessResponse(
-                userService.updateUserInfo(updateUserDto, user)
-        );
-    }
-
-    @DeleteMapping
-    @Operation(summary = "Удаление", method = "DELETE")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
-    public void deleteUser(@AuthenticationPrincipal User user) {
-        userService.deleteUser(user);
     }
 }

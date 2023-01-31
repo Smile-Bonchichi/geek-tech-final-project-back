@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kg.geektech.geektechfinalprojectbackend.controller.BaseController;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import kg.geektech.geektechfinalprojectbackend.dto.category.CategoryDto;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Категория")
-public class CategoryController {
+public class CategoryController extends BaseController {
     final CategoryService categoryService;
 
     @Autowired
@@ -63,8 +64,9 @@ public class CategoryController {
     })
     public ResponseEntity<?> create(@RequestBody @Valid CategoryDto categoryDto,
                                     @AuthenticationPrincipal User user) {
-        return ResponseEntity
-                .ok(categoryService.create(categoryDto, user));
+        return constructSuccessResponse(
+                categoryService.create(categoryDto, user)
+        );
     }
 
     @GetMapping
@@ -99,8 +101,9 @@ public class CategoryController {
                     })
     })
     public ResponseEntity<?> getById(@RequestBody @Valid CategoryDto categoryDto) {
-        return ResponseEntity
-                .ok(categoryService.findById(categoryDto));
+        return constructSuccessResponse(
+                categoryService.findById(categoryDto)
+        );
     }
 
     @PutMapping
@@ -136,8 +139,9 @@ public class CategoryController {
     })
     public ResponseEntity<?> change(@RequestBody @Valid CategoryDto categoryDto,
                                     @AuthenticationPrincipal User user) {
-        return ResponseEntity
-                .ok(categoryService.change(categoryDto, user));
+        return constructSuccessResponse(
+                categoryService.change(categoryDto, user)
+        );
     }
 
     @DeleteMapping
@@ -172,8 +176,9 @@ public class CategoryController {
                     })
     })
     public ResponseEntity<?> delete(@RequestBody @Valid CategoryDto categoryDto) {
-        return ResponseEntity
-                .ok(categoryService.delete(categoryDto));
+        return constructSuccessResponse(
+                categoryService.delete(categoryDto)
+        );
     }
 
     @GetMapping("get-all")
@@ -208,7 +213,8 @@ public class CategoryController {
                     })
     })
     public ResponseEntity<?> getAll() {
-        return ResponseEntity
-                .ok(categoryService.getAll());
+        return constructSuccessResponse(
+                categoryService.getAll()
+        );
     }
 }

@@ -12,6 +12,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(name = "Модель данных запроса")
-public abstract class BaseRequest {
+public class BaseRequest {
 
 }

@@ -1,7 +1,6 @@
 package kg.geektech.geektechfinalprojectbackend.dto.card.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,10 +8,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(name = "Модель данных авторизации")
-public class CardDto extends BaseResponse {
+public class CardDto {
     @Schema(description = "ФИО", example = "Уланов Нурдин")
     String fullName;
     @Schema(description = "Почта", example = "test@gmail.com")

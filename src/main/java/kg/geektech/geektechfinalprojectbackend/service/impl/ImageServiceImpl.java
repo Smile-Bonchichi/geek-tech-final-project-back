@@ -2,7 +2,7 @@ package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import kg.geektech.geektechfinalprojectbackend.dto.image.response.ImageDto;
+import kg.geektech.geektechfinalprojectbackend.dto.image.ImageDto;
 import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.exception.image.ImageLoadException;

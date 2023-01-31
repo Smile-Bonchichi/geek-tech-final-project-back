@@ -13,9 +13,9 @@ import kg.geektech.geektechfinalprojectbackend.exception.common.NotFoundExceptio
 import kg.geektech.geektechfinalprojectbackend.mapper.CategoryMapper;
 import kg.geektech.geektechfinalprojectbackend.mapper.ImageMapper;
 import kg.geektech.geektechfinalprojectbackend.mapper.ProductMapper;
-import kg.geektech.geektechfinalprojectbackend.repository.CategoryRepository;
 import kg.geektech.geektechfinalprojectbackend.repository.FavoriteProductRepository;
 import kg.geektech.geektechfinalprojectbackend.repository.ProductRepository;
+import kg.geektech.geektechfinalprojectbackend.service.CategoryService;
 import kg.geektech.geektechfinalprojectbackend.service.ImageService;
 import kg.geektech.geektechfinalprojectbackend.service.ProductService;
 import lombok.AccessLevel;
@@ -32,17 +32,17 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     final ProductRepository productRepository;
     final FavoriteProductRepository favoriteProductRepository;
-    final CategoryRepository categoryRepository;
+    final CategoryService categoryService;
     final ImageService imageService;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               FavoriteProductRepository favoriteProductRepository,
-                              CategoryRepository categoryRepository,
+                              CategoryService categoryService,
                               ImageService imageService) {
         this.productRepository = productRepository;
         this.favoriteProductRepository = favoriteProductRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
         this.imageService = imageService;
     }
 
@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
                                 .name(addProductDto.getName())
                                 .description(addProductDto.getDescription())
                                 .price(addProductDto.getPrice())
-                                .categories(categoryRepository.findAllById(addProductDto.getCategoryId()))
+                                .categories(categoryService.getAllByIds(addProductDto.getCategoryId()))
                                 .images(imageService.loadImages(addProductDto.getImages(), Image.ImageType.PRODUCT, user))
                                 .isPresent(true)
                                 .build()
@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
                                 .setPrice(changeProductDto.getPrice() != null ? changeProductDto.getPrice() : product.getPrice())
                                 .setCategories(
                                         changeProductDto.getCategoryId() != null ?
-                                                categoryRepository.findAllById(changeProductDto.getCategoryId()) :
+                                                categoryService.getAllByIds(changeProductDto.getCategoryId()) :
                                                 product.getCategories()
                                 )
                                 .setImages(
@@ -151,7 +151,8 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    private Product getById(Long id) {
+    @Override
+    public Product getById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Такого продукта нет", HttpStatus.BAD_REQUEST));
     }

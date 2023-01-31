@@ -1,6 +1,6 @@
 package kg.geektech.geektechfinalprojectbackend.mapper;
 
-import kg.geektech.geektechfinalprojectbackend.dto.image.response.ImageDto;
+import kg.geektech.geektechfinalprojectbackend.dto.image.ImageDto;
 import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

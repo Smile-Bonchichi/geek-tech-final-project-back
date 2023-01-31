@@ -1,14 +1,15 @@
 package kg.geektech.geektechfinalprojectbackend.entity.basket;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.geektechfinalprojectbackend.entity.BaseEntity;
 import kg.geektech.geektechfinalprojectbackend.entity.product.Product;
 import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -24,11 +25,8 @@ public class Basket extends BaseEntity {
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "basket_product",
-            joinColumns = @JoinColumn(name = "basket_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    List<Product> products;
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    Product product;
 }

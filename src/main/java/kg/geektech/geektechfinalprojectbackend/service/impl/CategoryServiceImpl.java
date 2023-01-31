@@ -92,6 +92,11 @@ public class CategoryServiceImpl implements CategoryService {
         );
     }
 
+    @Override
+    public List<Category> getAllByIds(List<Long> ids) {
+        return categoryRepository.findAllById(ids);
+    }
+
     private Category getById(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Такой категории нет", HttpStatus.BAD_REQUEST));
