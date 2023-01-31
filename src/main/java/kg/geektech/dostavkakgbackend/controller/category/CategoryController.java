@@ -9,7 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
 import kg.geektech.dostavkakgbackend.dto.BaseResponse;
-import kg.geektech.dostavkakgbackend.dto.category.CategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.request.CRUDCategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.service.CategoryService;
 import lombok.AccessLevel;
@@ -62,10 +63,10 @@ public class CategoryController extends BaseController {
                             )
                     })
     })
-    public ResponseEntity<?> create(@RequestBody @Valid CategoryDto categoryDto,
+    public ResponseEntity<?> create(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto,
                                     @AuthenticationPrincipal User user) {
         return constructSuccessResponse(
-                categoryService.create(categoryDto, user)
+                categoryService.create(CRUDCategoryDto, user)
         );
     }
 
@@ -100,9 +101,9 @@ public class CategoryController extends BaseController {
                             )
                     })
     })
-    public ResponseEntity<?> getById(@RequestBody @Valid CategoryDto categoryDto) {
+    public ResponseEntity<?> getById(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto) {
         return constructSuccessResponse(
-                categoryService.findById(categoryDto)
+                categoryService.findById(CRUDCategoryDto)
         );
     }
 
@@ -137,25 +138,16 @@ public class CategoryController extends BaseController {
                             )
                     })
     })
-    public ResponseEntity<?> change(@RequestBody @Valid CategoryDto categoryDto,
+    public ResponseEntity<?> change(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto,
                                     @AuthenticationPrincipal User user) {
         return constructSuccessResponse(
-                categoryService.change(categoryDto, user)
+                categoryService.change(CRUDCategoryDto, user)
         );
     }
 
     @DeleteMapping
     @Operation(summary = "Удаление по ID", method = "DELETE")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное удаление по ID",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CategoryDto.class)
-                            )
-                    }),
             @ApiResponse(
                     responseCode = "400",
                     description = "Не коректные данные",
@@ -175,10 +167,8 @@ public class CategoryController extends BaseController {
                             )
                     })
     })
-    public ResponseEntity<?> delete(@RequestBody @Valid CategoryDto categoryDto) {
-        return constructSuccessResponse(
-                categoryService.delete(categoryDto)
-        );
+    public void delete(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto) {
+        categoryService.delete(CRUDCategoryDto);
     }
 
     @GetMapping("get-all")

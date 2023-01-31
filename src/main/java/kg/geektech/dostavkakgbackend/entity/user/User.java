@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kg.geektech.dostavkakgbackend.entity.BaseEntity;
+import kg.geektech.dostavkakgbackend.entity.image.Image;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
@@ -58,6 +59,10 @@ public class User extends BaseEntity implements UserDetails {
     @NotNull
     @Column(name = "is_enabled")
     boolean enabled;
+
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    Image image;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -15,11 +15,14 @@ public interface ProductService {
 
     ProductDto change(ChangeProductDto changeProductDto, User user);
 
-    ProductDto delete(Long id);
+    void delete(Long id);
 
     List<ProductInfoDto> getAll();
 
     Product getById(Long id);
+    List<Product> getAllById(List<Long> id);
+
+    void save(Product product);
 
     FavoriteProductDto favorite(Long id, User user);
 

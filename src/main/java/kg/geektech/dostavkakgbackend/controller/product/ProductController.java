@@ -144,14 +144,12 @@ public class ProductController extends BaseController {
                             )
                     })
     })
-    public ResponseEntity<?> delete(@PathVariable("id")
-                                    @Valid
-                                    @NotNull @Min(1)
-                                    @Schema(description = "ID продукта")
-                                    Long id) {
-        return constructSuccessResponse(
-                productService.delete(id)
-        );
+    public void delete(@PathVariable("id")
+                       @Valid
+                       @NotNull @Min(1)
+                       @Schema(description = "ID продукта")
+                       Long id) {
+        productService.delete(id);
     }
 
     @GetMapping

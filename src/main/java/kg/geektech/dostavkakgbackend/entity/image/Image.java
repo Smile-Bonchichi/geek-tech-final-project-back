@@ -25,11 +25,6 @@ public class Image extends BaseEntity {
     @Column(name = "type")
     ImageType type;
 
-    @NotNull
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    User user;
-
     public enum ImageType {
         AVATAR,
         PRODUCT,

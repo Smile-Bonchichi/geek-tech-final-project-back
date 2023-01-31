@@ -1,7 +1,8 @@
 package kg.geektech.dostavkakgbackend.dto.product.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kg.geektech.dostavkakgbackend.dto.category.CategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.request.CRUDCategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.dto.image.ImageDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

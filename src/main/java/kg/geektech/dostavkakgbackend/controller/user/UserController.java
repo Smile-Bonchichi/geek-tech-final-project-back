@@ -99,7 +99,7 @@ public class UserController extends BaseController {
     }
 
     @GetMapping
-    @Operation(summary = "Получение информации", method = "PUT")
+    @Operation(summary = "Получение информации", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

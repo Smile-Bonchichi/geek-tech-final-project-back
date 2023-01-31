@@ -2,10 +2,10 @@ package kg.geektech.dostavkakgbackend.mapper;
 
 import kg.geektech.dostavkakgbackend.dto.card.response.CardDto;
 import kg.geektech.dostavkakgbackend.dto.user.UpdateUserDto;
-import kg.geektech.dostavkakgbackend.dto.user.response.UserDto;
 import kg.geektech.dostavkakgbackend.entity.card.UserCard;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -14,7 +14,7 @@ public interface UserMapper {
 
     UpdateUserDto userToUpdateUserDto(User user);
 
+    @Mapping(target = "email", source = "user.email")
+    @Mapping(target = "fullName", source = "user.fullName")
     CardDto userCardToCardDto(UserCard userCard);
-
-    UserDto userToUserDto(User user);
 }

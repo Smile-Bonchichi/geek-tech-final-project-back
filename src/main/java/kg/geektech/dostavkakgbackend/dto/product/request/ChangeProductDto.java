@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import kg.geektech.dostavkakgbackend.dto.BaseRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,8 +30,8 @@ public class ChangeProductDto extends BaseRequest {
     @Min(100)
     @Schema(description = "Цена продукта", example = "150")
     BigDecimal price;
+    @Schema(description = "Наличие на складе", example = "true")
+    Boolean isPresent;
     @Schema(description = "ID категорий товара", example = "[1, 2, 3]")
     List<Long> categoryId;
-    @Schema(description = "Изображения продуктов")
-    List<MultipartFile> images;
 }

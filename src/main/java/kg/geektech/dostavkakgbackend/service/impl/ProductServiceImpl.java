@@ -1,22 +1,20 @@
 package kg.geektech.dostavkakgbackend.service.impl;
 
+import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.dto.product.request.AddProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.request.ChangeProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.FavoriteProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.ProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.ProductInfoDto;
-import kg.geektech.dostavkakgbackend.entity.image.Image;
 import kg.geektech.dostavkakgbackend.entity.product.FavoriteProduct;
 import kg.geektech.dostavkakgbackend.entity.product.Product;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.exception.common.NotFoundException;
-import kg.geektech.dostavkakgbackend.mapper.CategoryMapper;
 import kg.geektech.dostavkakgbackend.mapper.ImageMapper;
 import kg.geektech.dostavkakgbackend.mapper.ProductMapper;
 import kg.geektech.dostavkakgbackend.repository.FavoriteProductRepository;
 import kg.geektech.dostavkakgbackend.repository.ProductRepository;
 import kg.geektech.dostavkakgbackend.service.CategoryService;
-import kg.geektech.dostavkakgbackend.service.ImageService;
 import kg.geektech.dostavkakgbackend.service.ProductService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -24,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -33,17 +31,14 @@ public class ProductServiceImpl implements ProductService {
     final ProductRepository productRepository;
     final FavoriteProductRepository favoriteProductRepository;
     final CategoryService categoryService;
-    final ImageService imageService;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               FavoriteProductRepository favoriteProductRepository,
-                              CategoryService categoryService,
-                              ImageService imageService) {
+                              CategoryService categoryService) {
         this.productRepository = productRepository;
         this.favoriteProductRepository = favoriteProductRepository;
         this.categoryService = categoryService;
-        this.imageService = imageService;
     }
 
     @Override
@@ -55,7 +50,6 @@ public class ProductServiceImpl implements ProductService {
                                 .description(addProductDto.getDescription())
                                 .price(addProductDto.getPrice())
                                 .categories(categoryService.getAllByIds(addProductDto.getCategoryId()))
-                                .images(imageService.loadImages(addProductDto.getImages(), Image.ImageType.PRODUCT, user))
                                 .isPresent(true)
                                 .build()
                 )
@@ -69,58 +63,79 @@ public class ProductServiceImpl implements ProductService {
         return ProductMapper.INSTANCE.productToPutProductDto(
                 productRepository.save(
                         product
-                                .setName(changeProductDto.getName() != null ? changeProductDto.getName() : product.getName())
+                                .setName(
+                                        changeProductDto.getName() != null ?
+                                                changeProductDto.getName() :
+                                                product.getName()
+                                )
                                 .setDescription(
                                         changeProductDto.getDescription() != null ?
                                                 changeProductDto.getDescription() :
                                                 product.getDescription()
                                 )
-                                .setPrice(changeProductDto.getPrice() != null ? changeProductDto.getPrice() : product.getPrice())
+                                .setPrice(
+                                        changeProductDto.getPrice() != null ?
+                                                changeProductDto.getPrice() :
+                                                product.getPrice()
+                                )
+                                .setIsPresent(
+                                        changeProductDto.getIsPresent() != null ?
+                                                changeProductDto.getIsPresent() :
+                                                product.getIsPresent()
+                                )
                                 .setCategories(
                                         changeProductDto.getCategoryId() != null ?
                                                 categoryService.getAllByIds(changeProductDto.getCategoryId()) :
                                                 product.getCategories()
-                                )
-                                .setImages(
-                                        changeProductDto.getImages() != null ?
-                                                imageService.loadImages(changeProductDto.getImages(), Image.ImageType.PRODUCT, user) :
-                                                product.getImages()
                                 )
                 )
         );
     }
 
     @Override
-    public ProductDto delete(Long id) {
-        Product product = getById(id);
-        productRepository.delete(product);
-
-        return ProductMapper.INSTANCE.productToPutProductDto(
-                product
-        );
+    public void delete(Long id) {
+        productRepository.delete(getById(id));
     }
 
     @Override
     public List<ProductInfoDto> getAll() {
-        List<ProductInfoDto> productInfoDtos = new ArrayList<>();
-
-        productRepository.findAll()
-                .forEach(x -> productInfoDtos.add(
-                                ProductInfoDto.builder()
-                                        .name(x.getName())
-                                        .description(x.getDescription())
-                                        .price(x.getPrice())
-                                        .categoryDtos(
-                                                CategoryMapper.INSTANCE.categoriesToCategoryDtos(x.getCategories())
+        return productRepository.findAll().stream()
+                .map(x -> ProductInfoDto.builder()
+                        .name(x.getName())
+                        .description(x.getDescription())
+                        .price(x.getPrice())
+                        .categoryDtos(
+                                x.getCategories().stream()
+                                        .map(c -> CategoryDto.builder()
+                                                .id(c.getId())
+                                                .name(c.getName())
+                                                .imageDtos(ImageMapper.INSTANCE.imagesToImageResponseDtos(c.getImages()))
+                                                .build()
                                         )
-                                        .imageDtos(
-                                                ImageMapper.INSTANCE.imagesToImageResponseDtos(x.getImages())
-                                        )
-                                        .build()
+                                        .collect(Collectors.toList())
                         )
-                );
+                        .imageDtos(
+                                ImageMapper.INSTANCE.imagesToImageResponseDtos(x.getImages())
+                        )
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
 
-        return productInfoDtos;
+    @Override
+    public Product getById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Такого продукта нет", HttpStatus.BAD_REQUEST));
+    }
+
+    @Override
+    public List<Product> getAllById(List<Long> id) {
+        return productRepository.findAllById(id);
+    }
+
+    @Override
+    public void save(Product product) {
+        productRepository.save(product);
     }
 
     @Override
@@ -132,9 +147,9 @@ public class ProductServiceImpl implements ProductService {
                         .build()
         );
 
-        return FavoriteProductDto.builder()
-                .name(favoriteProduct.getProduct().getName())
-                .build();
+        return buildFavoriteProductDto(
+                favoriteProduct.getProduct()
+        );
     }
 
     @Override
@@ -143,17 +158,17 @@ public class ProductServiceImpl implements ProductService {
 
         favoriteProductRepository.delete(
                 favoriteProductRepository.findByProductAndUser(product, user)
-                        .orElseThrow()
+                        .orElseThrow(() -> new NotFoundException("Такого избранного товара нет", HttpStatus.BAD_REQUEST))
         );
 
+        return buildFavoriteProductDto(
+                product
+        );
+    }
+
+    private FavoriteProductDto buildFavoriteProductDto(Product product) {
         return FavoriteProductDto.builder()
                 .name(product.getName())
                 .build();
-    }
-
-    @Override
-    public Product getById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Такого продукта нет", HttpStatus.BAD_REQUEST));
     }
 }

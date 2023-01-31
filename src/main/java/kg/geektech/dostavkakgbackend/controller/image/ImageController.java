@@ -8,19 +8,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
 import kg.geektech.dostavkakgbackend.dto.BaseResponse;
 import kg.geektech.dostavkakgbackend.dto.image.ImageDto;
 import kg.geektech.dostavkakgbackend.entity.image.Image;
-import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.service.ImageService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +35,7 @@ public class ImageController extends BaseController {
         this.imageService = imageService;
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     @Operation(summary = "Загрузка", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(
@@ -78,50 +77,13 @@ public class ImageController extends BaseController {
                                   @Valid
                                   @NotNull
                                   @Parameter(description = "Тип изображения") Image.ImageType type,
-                                  @AuthenticationPrincipal User user) {
+                                  @PathVariable("id")
+                                  @Valid
+                                  @NotNull @Min(1)
+                                  @Schema(description = "ID продукта")
+                                  Long id) {
         return constructSuccessResponse(
-                imageService.loadImage(image, type, user)
-        );
-    }
-
-    @GetMapping
-    @Operation(summary = "Получить всё по токену", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное получение",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ImageDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
-    public ResponseEntity<?> getAll(@RequestParam(name = "type")
-                                    @Valid
-                                    @NotNull
-                                    @Parameter(description = "Тип изображения") Image.ImageType type,
-                                    @AuthenticationPrincipal User user) {
-        return constructSuccessResponse(
-                imageService.getAllImages(type, user)
+                imageService.loadImage(image, id, type)
         );
     }
 }

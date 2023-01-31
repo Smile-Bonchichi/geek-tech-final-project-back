@@ -1,21 +1,26 @@
 package kg.geektech.dostavkakgbackend.service;
 
-import kg.geektech.dostavkakgbackend.dto.category.CategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.request.CRUDCategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.entity.category.Category;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 
 import java.util.List;
 
 public interface CategoryService {
-    CategoryDto create(CategoryDto categoryDto, User user);
+    CategoryDto create(CRUDCategoryDto CRUDCategoryDto, User user);
 
-    CategoryDto delete(CategoryDto categoryDto);
+    void delete(CRUDCategoryDto CRUDCategoryDto);
 
-    CategoryDto change(CategoryDto categoryDto, User user);
+    CategoryDto change(CRUDCategoryDto CRUDCategoryDto, User user);
 
-    CategoryDto findById(CategoryDto categoryDto);
+    CategoryDto findById(CRUDCategoryDto CRUDCategoryDto);
 
     List<CategoryDto> getAll();
 
     List<Category> getAllByIds(List<Long> ids);
+
+    Category getById(Long id);
+
+    void save(Category category);
 }

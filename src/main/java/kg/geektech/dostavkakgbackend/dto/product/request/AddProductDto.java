@@ -35,6 +35,4 @@ public class AddProductDto extends BaseRequest {
     @NotNull
     @Schema(description = "ID категорий товара", example = "[1, 2, 3]")
     List<Long> categoryId;
-    @Schema(description = "Изображения продуктов")
-    List<MultipartFile> images;
 }

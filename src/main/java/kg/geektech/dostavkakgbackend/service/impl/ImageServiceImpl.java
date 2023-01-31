@@ -3,12 +3,17 @@ package kg.geektech.dostavkakgbackend.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import kg.geektech.dostavkakgbackend.dto.image.ImageDto;
+import kg.geektech.dostavkakgbackend.entity.category.Category;
 import kg.geektech.dostavkakgbackend.entity.image.Image;
-import kg.geektech.dostavkakgbackend.entity.user.User;
+import kg.geektech.dostavkakgbackend.entity.product.Product;
+import kg.geektech.dostavkakgbackend.exception.common.NotFoundException;
 import kg.geektech.dostavkakgbackend.exception.image.ImageLoadException;
 import kg.geektech.dostavkakgbackend.mapper.ImageMapper;
 import kg.geektech.dostavkakgbackend.repository.ImageRepository;
+import kg.geektech.dostavkakgbackend.service.CategoryService;
 import kg.geektech.dostavkakgbackend.service.ImageService;
+import kg.geektech.dostavkakgbackend.service.ProductService;
+import kg.geektech.dostavkakgbackend.service.UserService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,48 +32,56 @@ import java.util.Map;
 public class ImageServiceImpl implements ImageService {
     final ImageRepository imageRepository;
     final Cloudinary cloudinary;
+    final UserService userService;
+    final ProductService productService;
+    final CategoryService categoryService;
 
     @Autowired
     public ImageServiceImpl(ImageRepository imageRepository,
-                            Cloudinary cloudinary) {
+                            Cloudinary cloudinary,
+                            UserService userService,
+                            ProductService productService,
+                            CategoryService categoryService) {
         this.imageRepository = imageRepository;
         this.cloudinary = cloudinary;
+        this.userService = userService;
+        this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @Override
-    public ImageDto loadImage(MultipartFile image, Image.ImageType type, User user) {
+    public ImageDto loadImage(MultipartFile image, Long id, Image.ImageType type) {
         Map upload = loadCloudinary(image);
 
-        return ImageMapper.INSTANCE.imageToImageResponseDto(
-                imageRepository.save(
-                        Image.builder()
-                                .type(type)
-                                .url((String) upload.get("url"))
-                                .user(user)
-                                .build()
-                )
+        Image imageDB = imageRepository.save(
+                Image.builder()
+                        .type(type)
+                        .url((String) upload.get("url"))
+                        .build()
         );
-    }
 
-    @Override
-    public List<Image> loadImages(List<MultipartFile> images, Image.ImageType type, User user) {
-        List<Image> imageList = new ArrayList<>();
+        switch (type) {
+            case AVATAR -> userService.save(userService.getById(id).setImage(imageDB));
+            case PRODUCT -> {
+                Product product = productService.getById(id);
 
-        for (int i = 0; i < images.size(); i++) {
-            Map upload = loadCloudinary(images.get(i));
+                List<Image> images = product.getImages();
+                images.add(imageDB);
+                productService.save(product.setImages(images));
+            }
+            case CATEGORY -> {
+                Category category = categoryService.getById(id);
 
-            imageList.add(
-                    imageRepository.save(
-                            Image.builder()
-                                    .type(type)
-                                    .url((String) upload.get("url"))
-                                    .user(user)
-                                    .build()
-                    )
-            );
+                List<Image> images = category.getImages();
+                images.add(imageDB);
+                categoryService.save(category.setImages(images));
+            }
+            default -> throw new NotFoundException("Такого типа изображения нет", HttpStatus.BAD_REQUEST);
         }
 
-        return imageList;
+        return ImageMapper.INSTANCE.imageToImageResponseDto(
+                imageDB
+        );
     }
 
     private Map loadCloudinary(MultipartFile image) {
@@ -86,12 +98,5 @@ public class ImageServiceImpl implements ImageService {
         } catch (IOException e) {
             throw new ImageLoadException("Не удалось загрузить фотографию", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @Override
-    public List<ImageDto> getAllImages(Image.ImageType type, User user) {
-        return ImageMapper.INSTANCE.imagesToImageResponseDtos(
-                imageRepository.findAllByTypeAndUser(type, user)
-        );
     }
 }

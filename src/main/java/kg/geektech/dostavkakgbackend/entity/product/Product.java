@@ -34,7 +34,6 @@ public class Product extends BaseEntity {
     @NotNull
     @Column(name = "is_present")
     Boolean isPresent;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_category",
@@ -42,7 +41,6 @@ public class Product extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     List<Category> categories;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_image",

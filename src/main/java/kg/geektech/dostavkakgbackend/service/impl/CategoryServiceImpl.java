@@ -1,95 +1,85 @@
 package kg.geektech.dostavkakgbackend.service.impl;
 
-import kg.geektech.dostavkakgbackend.dto.category.CategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.request.CRUDCategoryDto;
+import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.entity.category.Category;
-import kg.geektech.dostavkakgbackend.entity.image.Image;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.exception.common.NotFoundException;
-import kg.geektech.dostavkakgbackend.mapper.CategoryMapper;
+import kg.geektech.dostavkakgbackend.mapper.ImageMapper;
 import kg.geektech.dostavkakgbackend.repository.CategoryRepository;
 import kg.geektech.dostavkakgbackend.service.CategoryService;
-import kg.geektech.dostavkakgbackend.service.ImageService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryServiceImpl implements CategoryService {
     final CategoryRepository categoryRepository;
-    final ImageService imageService;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository,
-                               ImageService imageService) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.imageService = imageService;
     }
 
     @Override
-    public CategoryDto create(CategoryDto categoryDto, User user) {
-        return CategoryMapper.INSTANCE.categoryToCategoryDto(
-                categoryRepository.save(
-                        Category.builder()
-                                .name(categoryDto.getName())
-                                .images(
-                                        imageService.loadImages(
-                                                categoryDto.getImages(),
-                                                Image.ImageType.CATEGORY,
-                                                user
-                                        )
-                                )
-                                .build()
-                )
+    public CategoryDto create(CRUDCategoryDto CRUDCategoryDto, User user) {
+        Category category = categoryRepository.save(
+                Category.builder()
+                        .name(CRUDCategoryDto.getName())
+                        .build()
         );
-    }
 
-    @Override
-    public CategoryDto delete(CategoryDto categoryDto) {
-        Category category = getById(categoryDto.getId());
-
-        categoryRepository.delete(category);
-
-        return CategoryMapper.INSTANCE.categoryToCategoryDto(
+        return buildCategoryDto(
                 category
         );
     }
 
     @Override
-    public CategoryDto change(CategoryDto categoryDto, User user) {
-        Category category = getById(categoryDto.getId());
+    public void delete(CRUDCategoryDto CRUDCategoryDto) {
+        categoryRepository.delete(getById(CRUDCategoryDto.getId()));
+    }
 
-        return CategoryMapper.INSTANCE.categoryToCategoryDto(
-                categoryRepository.save(
-                        category
-                                .setName(categoryDto.getName() != null ? categoryDto.getName() : category.getName())
-                                .setImages(
-                                        categoryDto.getImages() != null ?
-                                                imageService.loadImages(categoryDto.getImages(), Image.ImageType.CATEGORY, user) :
-                                                category.getImages()
-                                )
+    @Override
+    public CategoryDto change(CRUDCategoryDto CRUDCategoryDto, User user) {
+        Category category = getById(CRUDCategoryDto.getId());
+
+        category = categoryRepository.save(
+                category.setName(
+                        CRUDCategoryDto.getName() != null ?
+                                CRUDCategoryDto.getName() :
+                                category.getName()
                 )
+        );
+
+        return buildCategoryDto(
+                category
         );
     }
 
     @Override
-    public CategoryDto findById(CategoryDto categoryDto) {
-        return CategoryMapper.INSTANCE.categoryToCategoryDto(
-                categoryRepository.save(
-                        getById(categoryDto.getId())
-                )
+    public CategoryDto findById(CRUDCategoryDto CRUDCategoryDto) {
+        return buildCategoryDto(
+                getById(CRUDCategoryDto.getId())
         );
     }
 
     @Override
     public List<CategoryDto> getAll() {
-        return CategoryMapper.INSTANCE.categoriesToCategoryDtos(
-                categoryRepository.findAll()
-        );
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+
+        for (Category category : categoryRepository.findAll()) {
+            categoryDtos.add(
+                    buildCategoryDto(category)
+            );
+        }
+
+        return categoryDtos;
     }
 
     @Override
@@ -97,8 +87,21 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAllById(ids);
     }
 
-    private Category getById(Long id) {
+    @Override
+    public Category getById(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Такой категории нет", HttpStatus.BAD_REQUEST));
+    }
+
+    @Override
+    public void save(Category category) {
+        categoryRepository.save(category);
+    }
+
+    private CategoryDto buildCategoryDto(Category category) {
+        return CategoryDto.builder()
+                .id(category.getId())
+                .imageDtos(ImageMapper.INSTANCE.imagesToImageResponseDtos(category.getImages()))
+                .build();
     }
 }

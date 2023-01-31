@@ -6,6 +6,8 @@ import kg.geektech.dostavkakgbackend.dto.user.UpdateUserDto;
 import kg.geektech.dostavkakgbackend.dto.user.response.UserDto;
 import kg.geektech.dostavkakgbackend.entity.card.UserCard;
 import kg.geektech.dostavkakgbackend.entity.user.User;
+import kg.geektech.dostavkakgbackend.exception.common.NotFoundException;
+import kg.geektech.dostavkakgbackend.mapper.ImageMapper;
 import kg.geektech.dostavkakgbackend.mapper.UserMapper;
 import kg.geektech.dostavkakgbackend.repository.UserCardRepository;
 import kg.geektech.dostavkakgbackend.repository.UserRepository;
@@ -13,6 +15,7 @@ import kg.geektech.dostavkakgbackend.service.UserService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +54,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserInfo(User user) {
-        return UserMapper.INSTANCE.userToUserDto(user);
+        return UserDto.builder()
+                .pin(user.getPin())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .phoneNumber(user.getPhoneNumber())
+                .imageDto(ImageMapper.INSTANCE.imageToImageResponseDto(user.getImage()))
+                .build();
     }
 
     @Override
@@ -59,11 +68,31 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.userToUpdateUserDto(
                 userRepository.save(
                         user
-                                .setPin(updateUserDto.getPin() != null ? updateUserDto.getPin() : user.getPin())
-                                .setEmail(updateUserDto.getEmail() != null ? updateUserDto.getEmail() : user.getEmail())
-                                .setFullName(updateUserDto.getFullName() != null ? updateUserDto.getFullName() : user.getFullName())
-                                .setPhoneNumber(updateUserDto.getPhoneNumber() != null ? updateUserDto.getPhoneNumber() : user.getPhoneNumber())
-                                .setPassword(updateUserDto.getPassword() != null ? passwordEncoder.encode(updateUserDto.getPassword()) : user.getPassword())
+                                .setPin(
+                                        updateUserDto.getPin() != null ?
+                                                updateUserDto.getPin() :
+                                                user.getPin()
+                                )
+                                .setEmail(
+                                        updateUserDto.getEmail() != null ?
+                                                updateUserDto.getEmail() :
+                                                user.getEmail()
+                                )
+                                .setFullName(
+                                        updateUserDto.getFullName() != null ?
+                                                updateUserDto.getFullName() :
+                                                user.getFullName()
+                                )
+                                .setPhoneNumber(
+                                        updateUserDto.getPhoneNumber() != null ?
+                                                updateUserDto.getPhoneNumber() :
+                                                user.getPhoneNumber()
+                                )
+                                .setPassword(
+                                        updateUserDto.getPassword() != null ?
+                                                passwordEncoder.encode(updateUserDto.getPassword()) :
+                                                user.getPassword()
+                                )
                 )
         );
     }
@@ -71,5 +100,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public User getById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Такого пользователя нет", HttpStatus.BAD_REQUEST));
     }
 }
