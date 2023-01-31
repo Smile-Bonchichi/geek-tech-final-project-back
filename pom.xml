@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>kg.geektech</groupId>
-    <artifactId>geek-tech-final-project-backend</artifactId>
+    <artifactId>dostavkakg-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>geek-tech-final-project-backend</name>
+    <name>dostavkakg</name>
     <description>Final project for GeekTech</description>
     <properties>
         <java.version>17</java.version>

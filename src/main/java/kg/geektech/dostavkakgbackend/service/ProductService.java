@@ -1,0 +1,27 @@
+package kg.geektech.dostavkakgbackend.service;
+
+import kg.geektech.dostavkakgbackend.dto.product.request.AddProductDto;
+import kg.geektech.dostavkakgbackend.dto.product.request.ChangeProductDto;
+import kg.geektech.dostavkakgbackend.dto.product.response.FavoriteProductDto;
+import kg.geektech.dostavkakgbackend.dto.product.response.ProductDto;
+import kg.geektech.dostavkakgbackend.dto.product.response.ProductInfoDto;
+import kg.geektech.dostavkakgbackend.entity.product.Product;
+import kg.geektech.dostavkakgbackend.entity.user.User;
+
+import java.util.List;
+
+public interface ProductService {
+    ProductDto put(AddProductDto addProductDto, User user);
+
+    ProductDto change(ChangeProductDto changeProductDto, User user);
+
+    ProductDto delete(Long id);
+
+    List<ProductInfoDto> getAll();
+
+    Product getById(Long id);
+
+    FavoriteProductDto favorite(Long id, User user);
+
+    FavoriteProductDto deleteFavorite(Long id, User user);
+}
