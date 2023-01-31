@@ -9,11 +9,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.geektechfinalprojectbackend.dto.BaseResponse;
 import kg.geektech.geektechfinalprojectbackend.dto.category.CategoryDto;
+import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.service.CategoryService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -59,9 +61,10 @@ public class CategoryController {
                             )
                     })
     })
-    public ResponseEntity<?> create(@RequestBody @Valid CategoryDto categoryDto) {
+    public ResponseEntity<?> create(@RequestBody @Valid CategoryDto categoryDto,
+                                    @AuthenticationPrincipal User user) {
         return ResponseEntity
-                .ok(categoryService.create(categoryDto));
+                .ok(categoryService.create(categoryDto, user));
     }
 
     @GetMapping
@@ -131,9 +134,10 @@ public class CategoryController {
                             )
                     })
     })
-    public ResponseEntity<?> change(@RequestBody @Valid CategoryDto categoryDto) {
+    public ResponseEntity<?> change(@RequestBody @Valid CategoryDto categoryDto,
+                                    @AuthenticationPrincipal User user) {
         return ResponseEntity
-                .ok(categoryService.change(categoryDto));
+                .ok(categoryService.change(categoryDto, user));
     }
 
     @DeleteMapping

@@ -2,10 +2,13 @@ package kg.geektech.geektechfinalprojectbackend.service.impl;
 
 import kg.geektech.geektechfinalprojectbackend.dto.category.CategoryDto;
 import kg.geektech.geektechfinalprojectbackend.entity.category.Category;
+import kg.geektech.geektechfinalprojectbackend.entity.image.Image;
+import kg.geektech.geektechfinalprojectbackend.entity.user.User;
 import kg.geektech.geektechfinalprojectbackend.exception.common.NotFoundException;
 import kg.geektech.geektechfinalprojectbackend.mapper.CategoryMapper;
 import kg.geektech.geektechfinalprojectbackend.repository.CategoryRepository;
 import kg.geektech.geektechfinalprojectbackend.service.CategoryService;
+import kg.geektech.geektechfinalprojectbackend.service.ImageService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +21,28 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryServiceImpl implements CategoryService {
     final CategoryRepository categoryRepository;
+    final ImageService imageService;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository,
+                               ImageService imageService) {
         this.categoryRepository = categoryRepository;
+        this.imageService = imageService;
     }
 
     @Override
-    public CategoryDto create(CategoryDto categoryDto) {
+    public CategoryDto create(CategoryDto categoryDto, User user) {
         return CategoryMapper.INSTANCE.categoryToCategoryDto(
                 categoryRepository.save(
                         Category.builder()
                                 .name(categoryDto.getName())
+                                .images(
+                                        imageService.loadImages(
+                                                categoryDto.getImages(),
+                                                Image.ImageType.CATEGORY,
+                                                user
+                                        )
+                                )
                                 .build()
                 )
         );
@@ -47,12 +60,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto change(CategoryDto categoryDto) {
+    public CategoryDto change(CategoryDto categoryDto, User user) {
         Category category = getById(categoryDto.getId());
 
         return CategoryMapper.INSTANCE.categoryToCategoryDto(
                 categoryRepository.save(
-                        category.setName(categoryDto.getName())
+                        category
+                                .setName(categoryDto.getName() != null ? categoryDto.getName() : category.getName())
+                                .setImages(
+                                        categoryDto.getImages() != null ?
+                                                imageService.loadImages(categoryDto.getImages(), Image.ImageType.CATEGORY, user) :
+                                                category.getImages()
+                                )
                 )
         );
     }

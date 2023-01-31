@@ -228,6 +228,36 @@ public class ProductController {
     }
 
     @DeleteMapping("/favorite/{id}")
+    @Operation(summary = "Удаление избранного", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное удаление",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FavoriteProductDto.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не коректные данные",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на сервере",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)
+                            )
+                    })
+    })
     public ResponseEntity<?> deleteFavorite(@PathVariable("id")
                                             @Valid
                                             @NotNull @Min(1)
