@@ -3,7 +3,6 @@ package kg.geektech.dostavkakgbackend.service;
 import kg.geektech.dostavkakgbackend.dto.product.request.AddProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.request.ChangeProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.FavoriteProductDto;
-import kg.geektech.dostavkakgbackend.dto.product.response.ProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.ProductInfoDto;
 import kg.geektech.dostavkakgbackend.entity.product.Product;
 import kg.geektech.dostavkakgbackend.entity.user.User;
@@ -11,15 +10,16 @@ import kg.geektech.dostavkakgbackend.entity.user.User;
 import java.util.List;
 
 public interface ProductService {
-    ProductDto put(AddProductDto addProductDto, User user);
+    ProductInfoDto put(AddProductDto addProductDto, User user);
 
-    ProductDto change(ChangeProductDto changeProductDto, User user);
+    ProductInfoDto change(ChangeProductDto changeProductDto, User user);
 
     void delete(Long id);
 
     List<ProductInfoDto> getAll();
 
     Product getById(Long id);
+
     List<Product> getAllById(List<Long> id);
 
     void save(Product product);

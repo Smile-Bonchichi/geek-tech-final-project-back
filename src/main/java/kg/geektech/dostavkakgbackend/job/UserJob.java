@@ -18,7 +18,7 @@ public class UserJob {
     public UserJob(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+    //FIXME
     public void deleteUsersInDataBase() {
         List<User> users = userRepository.findAllByEnabledFalse();
 

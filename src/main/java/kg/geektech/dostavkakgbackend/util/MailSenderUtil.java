@@ -12,15 +12,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MailSenderUtil {
     @Value("${spring.mail.username}")
     String senderEmail;
-
     @Value("${custom.project.name}")
     String projectName;
-
     final JavaMailSender javaMailSender;
 
     @Autowired
@@ -36,10 +36,16 @@ public class MailSenderUtil {
                     "UTF-8"
             );
 
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(
+                    message,
+                    true,
+                    StandardCharsets.UTF_8.name()
+            );
+
             mimeMessageHelper.setFrom(senderEmail);
             mimeMessageHelper.setTo(email);
             mimeMessageHelper.setText(text, true);
+
             javaMailSender.send(message);
         } catch (MessagingException e) {
             throw new MailException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -25,7 +25,6 @@ public class Order extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     User user;
-
     @NotNull
     @Column(name = "is_accept")
     Boolean isAccept;

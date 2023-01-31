@@ -24,7 +24,6 @@ public class Basket extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     User user;
-
     @NotNull
     @OneToOne
     @JoinColumn(name = "product_id")

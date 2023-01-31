@@ -30,7 +30,7 @@ public class OrderController extends BaseController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/{id}")
+    @PostMapping
     @Operation(summary = "Добавление", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(

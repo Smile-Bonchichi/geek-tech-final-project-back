@@ -4,14 +4,12 @@ import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.dto.product.request.AddProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.request.ChangeProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.FavoriteProductDto;
-import kg.geektech.dostavkakgbackend.dto.product.response.ProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.ProductInfoDto;
 import kg.geektech.dostavkakgbackend.entity.product.FavoriteProduct;
 import kg.geektech.dostavkakgbackend.entity.product.Product;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.exception.common.NotFoundException;
 import kg.geektech.dostavkakgbackend.mapper.ImageMapper;
-import kg.geektech.dostavkakgbackend.mapper.ProductMapper;
 import kg.geektech.dostavkakgbackend.repository.FavoriteProductRepository;
 import kg.geektech.dostavkakgbackend.repository.ProductRepository;
 import kg.geektech.dostavkakgbackend.service.CategoryService;
@@ -42,8 +40,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto put(AddProductDto addProductDto, User user) {
-        return ProductMapper.INSTANCE.productToPutProductDto(
+    public ProductInfoDto put(AddProductDto addProductDto, User user) {
+        return buildProductInfoDto(
                 productRepository.save(
                         Product.builder()
                                 .name(addProductDto.getName())
@@ -57,10 +55,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto change(ChangeProductDto changeProductDto, User user) {
+    public ProductInfoDto change(ChangeProductDto changeProductDto, User user) {
         Product product = getById(changeProductDto.getId());
 
-        return ProductMapper.INSTANCE.productToPutProductDto(
+        return buildProductInfoDto(
                 productRepository.save(
                         product
                                 .setName(
@@ -100,26 +98,28 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductInfoDto> getAll() {
         return productRepository.findAll().stream()
-                .map(x -> ProductInfoDto.builder()
-                        .name(x.getName())
-                        .description(x.getDescription())
-                        .price(x.getPrice())
-                        .categoryDtos(
-                                x.getCategories().stream()
-                                        .map(c -> CategoryDto.builder()
-                                                .id(c.getId())
-                                                .name(c.getName())
-                                                .imageDtos(ImageMapper.INSTANCE.imagesToImageResponseDtos(c.getImages()))
-                                                .build()
-                                        )
-                                        .collect(Collectors.toList())
-                        )
-                        .imageDtos(
-                                ImageMapper.INSTANCE.imagesToImageResponseDtos(x.getImages())
-                        )
-                        .build()
-                )
+                .map(this::buildProductInfoDto)
                 .collect(Collectors.toList());
+    }
+
+    private ProductInfoDto buildProductInfoDto(Product product) {
+        return ProductInfoDto.builder()
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .categoryDtos(
+                        product.getCategories().stream()
+                                .map(c -> CategoryDto.builder()
+                                        .id(c.getId())
+                                        .name(c.getName())
+                                        .build()
+                                )
+                                .collect(Collectors.toList())
+                )
+                .imageDtos(
+                        ImageMapper.INSTANCE.imagesToImageResponseDtos(product.getImages())
+                )
+                .build();
     }
 
     @Override
