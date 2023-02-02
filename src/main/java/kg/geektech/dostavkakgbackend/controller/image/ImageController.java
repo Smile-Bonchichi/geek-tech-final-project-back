@@ -5,14 +5,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
-import kg.geektech.dostavkakgbackend.dto.BaseResponse;
 import kg.geektech.dostavkakgbackend.dto.image.ImageDto;
 import kg.geektech.dostavkakgbackend.entity.image.Image;
 import kg.geektech.dostavkakgbackend.service.ImageService;
@@ -39,35 +37,15 @@ public class ImageController extends BaseController {
 
     @PostMapping("/{id}")
     @Operation(summary = "Загрузка", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешная загрузка",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ImageDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешная загрузка",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ImageDto.class)
+                    )
+            })
     public ResponseEntity<?> load(@RequestParam(name = "image")
                                   @Valid
                                   @NotNull

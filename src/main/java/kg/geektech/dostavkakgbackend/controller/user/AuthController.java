@@ -4,11 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
-import kg.geektech.dostavkakgbackend.dto.BaseResponse;
 import kg.geektech.dostavkakgbackend.dto.auth.request.AuthenticationDto;
 import kg.geektech.dostavkakgbackend.dto.auth.request.RegistrationDto;
 import kg.geektech.dostavkakgbackend.dto.auth.response.AuthDto;
@@ -36,35 +34,15 @@ public class AuthController extends BaseController {
 
     @PostMapping("/sign-in")
     @Operation(summary = "Авторизаиця", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешная авторизация",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешная авторизация",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AuthDto.class)
+                    )
+            })
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDto authenticationDto) {
         return constructSuccessResponse(
                 authService.login(authenticationDto)
@@ -73,26 +51,6 @@ public class AuthController extends BaseController {
 
     @PostMapping("/sign-up")
     @Operation(summary = "Регистрация", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
     public void register(@RequestBody @Valid RegistrationDto registrationDto) {
         authService.register(registrationDto);
     }

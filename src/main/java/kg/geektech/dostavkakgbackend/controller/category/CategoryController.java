@@ -4,12 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
-import kg.geektech.dostavkakgbackend.dto.BaseResponse;
 import kg.geektech.dostavkakgbackend.dto.category.request.CRUDCategoryDto;
 import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.entity.user.User;
@@ -36,35 +34,15 @@ public class CategoryController extends BaseController {
 
     @PostMapping
     @Operation(summary = "Создание", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное создание",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CategoryDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное создание",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CategoryDto.class)
+                    )
+            })
     public ResponseEntity<?> create(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto,
                                     @AuthenticationPrincipal User user) {
         return constructSuccessResponse(
@@ -74,35 +52,15 @@ public class CategoryController extends BaseController {
 
     @GetMapping
     @Operation(summary = "Получение по ID", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное получение по ID",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CategoryDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное получение по ID",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CategoryDto.class)
+                    )
+            })
     public ResponseEntity<?> getById(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto) {
         return constructSuccessResponse(
                 categoryService.findById(CRUDCategoryDto)
@@ -111,35 +69,15 @@ public class CategoryController extends BaseController {
 
     @PutMapping
     @Operation(summary = "Изменение по ID", method = "PUT")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное изменение по ID",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CategoryDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное изменение по ID",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CategoryDto.class)
+                    )
+            })
     public ResponseEntity<?> change(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto,
                                     @AuthenticationPrincipal User user) {
         return constructSuccessResponse(
@@ -149,61 +87,21 @@ public class CategoryController extends BaseController {
 
     @DeleteMapping
     @Operation(summary = "Удаление по ID", method = "DELETE")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
     public void delete(@RequestBody @Valid CRUDCategoryDto CRUDCategoryDto) {
         categoryService.delete(CRUDCategoryDto);
     }
 
     @GetMapping("get-all")
     @Operation(summary = "Получение всех", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное получение всех",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CategoryDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное получение всех",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CategoryDto.class)
+                    )
+            })
     public ResponseEntity<?> getAll() {
         return constructSuccessResponse(
                 categoryService.getAll()

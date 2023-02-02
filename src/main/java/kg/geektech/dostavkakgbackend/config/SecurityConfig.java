@@ -23,10 +23,14 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     @Value("${custom.cors.domain}")
     String corsDomain;
-    final String WHITE_LIST_ENDPOINT = "/user/auth/**";
-    final String SWAGGER_PATH_ENDPOINT = "/swagger";
-    final String SWAGGER_ENDPOINT = "/swagger-ui/**";
-    final String API_DOCS_ENDPOINT = "/v3/api-docs/**";
+    final String[] WHITE_LIST_ENDPOINT = {
+            //Auth
+            "/user/auth/**",
+            //Swwager
+            "/swagger",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+    };
     final JwtAuthenticationFilter jwtAuthFilter;
     final AuthenticationProvider authenticationProvider;
 
@@ -54,24 +58,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors()
-                .and()
-                .csrf()
-                .disable()
+                .cors().and().csrf().disable()
+
                 .authorizeHttpRequests()
-                .requestMatchers(
-                        WHITE_LIST_ENDPOINT,
-                        SWAGGER_PATH_ENDPOINT,
-                        SWAGGER_ENDPOINT,
-                        API_DOCS_ENDPOINT
-                )
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .requestMatchers(WHITE_LIST_ENDPOINT).permitAll()
+                .anyRequest().authenticated()
+
                 .and()
+
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
+
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

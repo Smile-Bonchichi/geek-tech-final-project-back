@@ -4,14 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
-import kg.geektech.dostavkakgbackend.dto.BaseResponse;
 import kg.geektech.dostavkakgbackend.dto.product.request.AddProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.request.ChangeProductDto;
 import kg.geektech.dostavkakgbackend.dto.product.response.FavoriteProductDto;
@@ -41,35 +39,15 @@ public class ProductController extends BaseController {
 
     @PostMapping
     @Operation(summary = "Добавление", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное добавление",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ProductDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное добавление",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductDto.class)
+                    )
+            })
     public ResponseEntity<?> put(@RequestBody @Valid AddProductDto addProductDto,
                                  @AuthenticationPrincipal User user) {
         return constructSuccessResponse(
@@ -79,35 +57,15 @@ public class ProductController extends BaseController {
 
     @PutMapping
     @Operation(summary = "Обновление", method = "PUT")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное обновление",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ProductDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное обновление",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductDto.class)
+                    )
+            })
     public ResponseEntity<?> change(@RequestBody @Valid ChangeProductDto changeProductDto,
                                     @AuthenticationPrincipal User user) {
         return constructSuccessResponse(
@@ -117,35 +75,15 @@ public class ProductController extends BaseController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удаление", method = "DELETE")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное удаление",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ProductDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное удаление",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductDto.class)
+                    )
+            })
     public void delete(@PathVariable("id")
                        @Valid
                        @NotNull @Min(1)
@@ -156,35 +94,15 @@ public class ProductController extends BaseController {
 
     @GetMapping
     @Operation(summary = "Получение", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное получение",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ProductInfoDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное получение",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductInfoDto.class)
+                    )
+            })
     public ResponseEntity<?> getAll() {
         return constructSuccessResponse(
                 productService.getAll()
@@ -193,35 +111,15 @@ public class ProductController extends BaseController {
 
     @PostMapping("/favorite/{id}")
     @Operation(summary = "Добавление избранного", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное добавление",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = FavoriteProductDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное добавление",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = FavoriteProductDto.class)
+                    )
+            })
     public ResponseEntity<?> putFavorite(@PathVariable("id")
                                          @Valid
                                          @NotNull @Min(1)
@@ -235,35 +133,15 @@ public class ProductController extends BaseController {
 
     @DeleteMapping("/favorite/{id}")
     @Operation(summary = "Удаление избранного", method = "DELETE")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное удаление",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = FavoriteProductDto.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Не коректные данные",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    }),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Ошибка на сервере",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = BaseResponse.class)
-                            )
-                    })
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Успешное удаление",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = FavoriteProductDto.class)
+                    )
+            })
     public ResponseEntity<?> deleteFavorite(@PathVariable("id")
                                             @Valid
                                             @NotNull @Min(1)

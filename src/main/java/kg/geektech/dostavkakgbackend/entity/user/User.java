@@ -98,8 +98,8 @@ public class User extends BaseEntity implements UserDetails {
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public enum Role {
-        USER("user"),
-        ADMIN("admin"),
+        USER("USER"),
+        ADMIN("USER"),
         ;
 
         final String name;
