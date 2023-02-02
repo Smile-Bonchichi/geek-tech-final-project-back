@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kg.geektech.dostavkakgbackend.aop.Filter;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
 import kg.geektech.dostavkakgbackend.dto.card.request.AddCardDto;
 import kg.geektech.dostavkakgbackend.dto.card.response.CardDto;
@@ -18,7 +19,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +41,7 @@ public class UserController extends BaseController {
         userService.confirm(user);
     }
 
+    @Filter
     @PostMapping("/add-card")
     @Operation(summary = "Добавление карты", method = "PUT")
     @ApiResponse(
@@ -59,7 +60,7 @@ public class UserController extends BaseController {
         );
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @Filter
     @GetMapping
     @Operation(summary = "Получение информации", method = "GET")
     @ApiResponse(
@@ -77,6 +78,7 @@ public class UserController extends BaseController {
         );
     }
 
+    @Filter
     @PutMapping
     @Operation(summary = "Обновление профиля", method = "PUT")
     @ApiResponse(
@@ -95,6 +97,7 @@ public class UserController extends BaseController {
         );
     }
 
+    @Filter
     @DeleteMapping
     @Operation(summary = "Удаление", method = "DELETE")
     public void deleteUser(@AuthenticationPrincipal User user) {

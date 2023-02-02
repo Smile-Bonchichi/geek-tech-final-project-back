@@ -29,8 +29,8 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username ->
-                repository.findByEmailAndEnabledTrue(username)
-                        .orElseThrow(() -> new NotFoundException("User not found", HttpStatus.UNAUTHORIZED));
+                repository.findByEmail(username)
+                        .orElseThrow(() -> new NotFoundException("Пользователь не найден", HttpStatus.UNAUTHORIZED));
     }
 
     @Bean

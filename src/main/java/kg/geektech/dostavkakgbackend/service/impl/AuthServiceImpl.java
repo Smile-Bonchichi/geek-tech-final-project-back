@@ -71,8 +71,8 @@ public class AuthServiceImpl implements AuthService {
                         .password(passwordEncoder.encode(registrationDto.getPassword()))
                         .role(
                                 registrationDto.getFullName().equalsIgnoreCase("admin") ?
-                                        User.Role.ADMIN :
-                                        User.Role.USER
+                                        User.Role.ROLE_ADMIN :
+                                        User.Role.ROLE_USER
                         )
                         .enabled(false)
                         .build()

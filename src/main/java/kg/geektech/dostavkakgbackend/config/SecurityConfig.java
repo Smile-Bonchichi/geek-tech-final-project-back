@@ -1,6 +1,7 @@
 package kg.geektech.dostavkakgbackend.config;
 
 import kg.geektech.dostavkakgbackend.config.security.JwtAuthenticationFilter;
+import kg.geektech.dostavkakgbackend.entity.user.User;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers(WHITE_LIST_ENDPOINT).permitAll()
+
                 .anyRequest().authenticated()
 
                 .and()

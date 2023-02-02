@@ -97,11 +97,16 @@ public class User extends BaseEntity implements UserDetails {
     @Getter
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public enum Role {
-        USER("USER"),
-        ADMIN("USER"),
+    public enum Role implements GrantedAuthority {
+        ROLE_USER("USER"),
+        ROLE_ADMIN("ADMIN"),
         ;
 
         final String name;
+
+        @Override
+        public String getAuthority() {
+            return this.name;
+        }
     }
 }
