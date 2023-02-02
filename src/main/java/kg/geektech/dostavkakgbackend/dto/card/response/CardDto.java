@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Schema(name = "Модель данных авторизации")
+@Schema(name = "Модель данных карты пользователя")
 public class CardDto {
     @Schema(description = "ФИО", example = "Уланов Нурдин")
     String fullName;

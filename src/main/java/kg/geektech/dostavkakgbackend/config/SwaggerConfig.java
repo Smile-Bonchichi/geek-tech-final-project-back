@@ -1,5 +1,7 @@
 package kg.geektech.dostavkakgbackend.config;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -16,6 +18,12 @@ import java.util.List;
 
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class SwaggerConfig {
     @Value("${custom.project.name}")
     String projectName;

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Пользователь")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController extends BaseController {
     final UserService userService;
 

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/product")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Продукты")
+@SecurityRequirement(name = "bearerAuth")
 public class ProductController extends BaseController {
     final ProductService productService;
 

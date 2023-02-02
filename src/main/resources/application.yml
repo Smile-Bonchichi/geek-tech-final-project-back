@@ -53,6 +53,8 @@ springdoc:
 custom:
   secret:
     key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    token:
+      expired: 60
   cloudinary:
     name: dt212gr4m
     api-key: 839826362311982

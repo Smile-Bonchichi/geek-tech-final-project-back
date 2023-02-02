@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Schema(name = "Модель данных авторизации")
+@Schema(name = "Модель данных добавления карты")
 public class AddCardDto extends BaseRequest {
     @NotNull
     @Size(min = 16, max = 16, message = "Введите корректный номер карты")

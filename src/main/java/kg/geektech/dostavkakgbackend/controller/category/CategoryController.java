@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kg.geektech.dostavkakgbackend.controller.BaseController;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Категория")
+@SecurityRequirement(name = "bearerAuth")
 public class CategoryController extends BaseController {
     final CategoryService categoryService;
 
