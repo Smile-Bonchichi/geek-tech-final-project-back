@@ -15,29 +15,20 @@ import kg.geektech.dostavkakgbackend.repository.ProductRepository;
 import kg.geektech.dostavkakgbackend.service.CategoryService;
 import kg.geektech.dostavkakgbackend.service.ProductService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductServiceImpl implements ProductService {
     final ProductRepository productRepository;
     final FavoriteProductRepository favoriteProductRepository;
     final CategoryService categoryService;
-
-    @Autowired
-    public ProductServiceImpl(ProductRepository productRepository,
-                              FavoriteProductRepository favoriteProductRepository,
-                              CategoryService categoryService) {
-        this.productRepository = productRepository;
-        this.favoriteProductRepository = favoriteProductRepository;
-        this.categoryService = categoryService;
-    }
 
     @Override
     public ProductInfoDto put(AddProductDto addProductDto, User user) {
@@ -125,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Такого продукта нет", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new NotFoundException("Такого продукта нет"));
     }
 
     @Override
@@ -158,7 +149,7 @@ public class ProductServiceImpl implements ProductService {
 
         favoriteProductRepository.delete(
                 favoriteProductRepository.findByProductAndUser(product, user)
-                        .orElseThrow(() -> new NotFoundException("Такого избранного товара нет", HttpStatus.BAD_REQUEST))
+                        .orElseThrow(() -> new NotFoundException("Такого избранного товара нет"))
         );
 
         return buildFavoriteProductDto(

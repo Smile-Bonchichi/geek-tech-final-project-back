@@ -16,24 +16,20 @@ import kg.geektech.dostavkakgbackend.dto.user.response.UserDto;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.service.UserService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Пользователь")
 @SecurityRequirement(name = "bearerAuth")
 public class UserController extends BaseController {
     final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/confirm")
     @Operation(summary = "Подтверждение почты", method = "GET")

@@ -9,23 +9,19 @@ import kg.geektech.dostavkakgbackend.dto.order.request.AddOrderDto;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.service.OrderService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Заказы")
 @SecurityRequirement(name = "bearerAuth")
 public class OrderController extends BaseController {
     final OrderService orderService;
-
-    @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @PostMapping
     @Operation(summary = "Добавление", method = "POST")

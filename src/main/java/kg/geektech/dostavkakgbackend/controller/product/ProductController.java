@@ -18,24 +18,20 @@ import kg.geektech.dostavkakgbackend.dto.product.response.ProductInfoDto;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.service.ProductService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Продукты")
 @SecurityRequirement(name = "bearerAuth")
 public class ProductController extends BaseController {
     final ProductService productService;
-
-    @Autowired
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @PostMapping
     @Operation(summary = "Добавление", method = "POST")

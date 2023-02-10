@@ -15,9 +15,8 @@ import kg.geektech.dostavkakgbackend.service.ImageService;
 import kg.geektech.dostavkakgbackend.service.ProductService;
 import kg.geektech.dostavkakgbackend.service.UserService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImageServiceImpl implements ImageService {
     final ImageRepository imageRepository;
@@ -35,19 +35,6 @@ public class ImageServiceImpl implements ImageService {
     final UserService userService;
     final ProductService productService;
     final CategoryService categoryService;
-
-    @Autowired
-    public ImageServiceImpl(ImageRepository imageRepository,
-                            Cloudinary cloudinary,
-                            UserService userService,
-                            ProductService productService,
-                            CategoryService categoryService) {
-        this.imageRepository = imageRepository;
-        this.cloudinary = cloudinary;
-        this.userService = userService;
-        this.productService = productService;
-        this.categoryService = categoryService;
-    }
 
     @Override
     public ImageDto loadImage(MultipartFile image, Long id, Image.ImageType type) {
@@ -76,7 +63,7 @@ public class ImageServiceImpl implements ImageService {
                 images.add(imageDB);
                 categoryService.save(category.setImages(images));
             }
-            default -> throw new NotFoundException("Такого типа изображения нет", HttpStatus.BAD_REQUEST);
+            default -> throw new NotFoundException("Такого типа изображения нет");
         }
 
         return ImageMapper.INSTANCE.imageToImageResponseDto(
@@ -96,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
 
             return cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         } catch (IOException e) {
-            throw new ImageLoadException("Не удалось загрузить фотографию", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ImageLoadException("Не удалось загрузить фотографию");
         }
     }
 }

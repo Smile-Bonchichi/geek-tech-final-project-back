@@ -13,24 +13,20 @@ import kg.geektech.dostavkakgbackend.dto.category.response.CategoryDto;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.service.CategoryService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/category")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Категория")
 @SecurityRequirement(name = "bearerAuth")
 public class CategoryController extends BaseController {
     final CategoryService categoryService;
-
-    @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @PostMapping
     @Operation(summary = "Создание", method = "POST")

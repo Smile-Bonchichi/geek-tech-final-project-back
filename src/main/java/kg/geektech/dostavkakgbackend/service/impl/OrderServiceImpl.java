@@ -10,11 +10,12 @@ import kg.geektech.dostavkakgbackend.service.ProductService;
 import kg.geektech.dostavkakgbackend.util.CommonUtil;
 import kg.geektech.dostavkakgbackend.util.MailSenderUtil;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderServiceImpl implements OrderService {
     final OrderRepository orderRepository;
@@ -22,19 +23,6 @@ public class OrderServiceImpl implements OrderService {
     final MailSenderUtil mailSenderUtil;
     final CommonUtil commonUtil;
     final JwtService jwtService;
-
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository,
-                            ProductService productService,
-                            MailSenderUtil mailSenderUtil,
-                            CommonUtil commonUtil,
-                            JwtService jwtService) {
-        this.orderRepository = orderRepository;
-        this.productService = productService;
-        this.mailSenderUtil = mailSenderUtil;
-        this.commonUtil = commonUtil;
-        this.jwtService = jwtService;
-    }
 
     @Override
     public void add(AddOrderDto addOrderDto, User user) {
@@ -46,17 +34,11 @@ public class OrderServiceImpl implements OrderService {
                         .build()
         );
 
-        sendConfirmToEmail(
-                order.getUser().getEmail(),
-                jwtService.generateToken(order.getUser())
-        );
-    }
-
-    private void sendConfirmToEmail(String email, String token) {
+        //FIXME
         mailSenderUtil.send(
-                email,
+                order.getUser().getEmail(),
                 "Подтверждение заказа",
-                commonUtil.buildConfirmEmailText(token)
+                commonUtil.buildConfirmEmailText(jwtService.generateToken(order.getUser()))
         );
     }
 

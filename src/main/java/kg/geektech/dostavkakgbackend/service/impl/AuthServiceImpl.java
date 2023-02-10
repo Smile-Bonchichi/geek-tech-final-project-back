@@ -10,8 +10,8 @@ import kg.geektech.dostavkakgbackend.service.AuthService;
 import kg.geektech.dostavkakgbackend.util.CommonUtil;
 import kg.geektech.dostavkakgbackend.util.MailSenderUtil;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthServiceImpl implements AuthService {
     final UserRepository userRepository;
@@ -27,21 +28,6 @@ public class AuthServiceImpl implements AuthService {
     final AuthenticationManager authenticationManager;
     final MailSenderUtil mailSenderUtil;
     final CommonUtil commonUtil;
-
-    @Autowired
-    public AuthServiceImpl(UserRepository userRepository,
-                           JwtService jwtService,
-                           PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
-                           MailSenderUtil mailSenderUtil,
-                           CommonUtil commonUtil) {
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.mailSenderUtil = mailSenderUtil;
-        this.commonUtil = commonUtil;
-    }
 
     @Override
     public AuthDto login(AuthenticationDto authenticationDto) {
@@ -78,17 +64,10 @@ public class AuthServiceImpl implements AuthService {
                         .build()
         );
 
-        sendConfirmToEmail(
-                user.getEmail(),
-                jwtService.generateToken(user)
-        );
-    }
-
-    private void sendConfirmToEmail(String email, String token) {
         mailSenderUtil.send(
-                email,
+                user.getEmail(),
                 "Подтверждение почты",
-                commonUtil.buildConfirmEmailText(token)
+                commonUtil.buildConfirmEmailText(jwtService.generateToken(user))
         );
     }
 }

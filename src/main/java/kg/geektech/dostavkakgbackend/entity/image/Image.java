@@ -3,7 +3,6 @@ package kg.geektech.dostavkakgbackend.entity.image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import kg.geektech.dostavkakgbackend.entity.BaseEntity;
-import kg.geektech.dostavkakgbackend.entity.user.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

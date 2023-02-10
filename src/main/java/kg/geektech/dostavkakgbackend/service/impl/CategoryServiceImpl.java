@@ -9,23 +9,18 @@ import kg.geektech.dostavkakgbackend.mapper.ImageMapper;
 import kg.geektech.dostavkakgbackend.repository.CategoryRepository;
 import kg.geektech.dostavkakgbackend.service.CategoryService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryServiceImpl implements CategoryService {
     final CategoryRepository categoryRepository;
-
-    @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 
     @Override
     public CategoryDto create(CRUDCategoryDto CRUDCategoryDto, User user) {
@@ -90,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Такой категории нет", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new NotFoundException("Такой категории нет"));
     }
 
     @Override

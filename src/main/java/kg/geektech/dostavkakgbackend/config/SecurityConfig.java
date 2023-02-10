@@ -1,10 +1,10 @@
 package kg.geektech.dostavkakgbackend.config;
 
 import kg.geektech.dostavkakgbackend.config.security.JwtAuthenticationFilter;
-import kg.geektech.dostavkakgbackend.entity.user.User;
+import kg.geektech.dostavkakgbackend.exception.auth.AuthenticationException;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +20,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfig {
     @Value("${custom.cors.domain}")
@@ -27,20 +28,13 @@ public class SecurityConfig {
     final String[] WHITE_LIST_ENDPOINT = {
             //Auth
             "/user/auth/**",
-            //Swwager
+            //Swagger
             "/swagger",
             "/swagger-ui/**",
             "/v3/api-docs/**"
     };
     final JwtAuthenticationFilter jwtAuthFilter;
     final AuthenticationProvider authenticationProvider;
-
-    @Autowired
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
-                          AuthenticationProvider authenticationProvider) {
-        this.jwtAuthFilter = jwtAuthFilter;
-        this.authenticationProvider = authenticationProvider;
-    }
 
     @Bean
     public CorsFilter corsFilter() {
@@ -57,24 +51,28 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .cors().and().csrf().disable()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        try {
+            return http
+                    .cors().and().csrf().disable()
 
-                .authorizeHttpRequests()
-                .requestMatchers(WHITE_LIST_ENDPOINT).permitAll()
+                    .authorizeHttpRequests()
+                    .requestMatchers(WHITE_LIST_ENDPOINT).permitAll()
 
-                .anyRequest().authenticated()
+                    .anyRequest().authenticated()
 
-                .and()
+                    .and()
 
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                .and()
+                    .and()
 
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                    .authenticationProvider(authenticationProvider)
+                    .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                    .build();
+        } catch (Exception e) {
+            throw new AuthenticationException(e.getMessage());
+        }
     }
 }

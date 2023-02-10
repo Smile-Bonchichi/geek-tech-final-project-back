@@ -15,8 +15,8 @@ import kg.geektech.dostavkakgbackend.dto.image.ImageDto;
 import kg.geektech.dostavkakgbackend.entity.image.Image;
 import kg.geektech.dostavkakgbackend.service.ImageService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/image")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Изображения")
 @SecurityRequirement(name = "bearerAuth")
 public class ImageController extends BaseController {
     final ImageService imageService;
-
-    @Autowired
-    public ImageController(ImageService imageService) {
-        this.imageService = imageService;
-    }
 
     @PostMapping("/{id}")
     @Operation(summary = "Загрузка", method = "POST")

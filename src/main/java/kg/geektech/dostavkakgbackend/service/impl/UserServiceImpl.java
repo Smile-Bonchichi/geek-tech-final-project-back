@@ -13,27 +13,18 @@ import kg.geektech.dostavkakgbackend.repository.UserCardRepository;
 import kg.geektech.dostavkakgbackend.repository.UserRepository;
 import kg.geektech.dostavkakgbackend.service.UserService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
     final UserCardRepository userCardRepository;
     final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           UserCardRepository userCardRepository,
-                           PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.userCardRepository = userCardRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public void confirm(User user) {
@@ -110,6 +101,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Такого пользователя нет", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new NotFoundException("Такого пользователя нет"));
     }
 }

@@ -14,24 +14,20 @@ import kg.geektech.dostavkakgbackend.dto.basket.BasketDto;
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import kg.geektech.dostavkakgbackend.service.BasketService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/basket")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Корзина")
 @SecurityRequirement(name = "bearerAuth")
 public class BasketController extends BaseController {
     final BasketService basketService;
-
-    @Autowired
-    public BasketController(BasketService basketService) {
-        this.basketService = basketService;
-    }
 
     @PostMapping("/{id}")
     @Operation(summary = "Добавление продукта", method = "POST")

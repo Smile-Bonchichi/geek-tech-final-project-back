@@ -2,6 +2,7 @@ package kg.geektech.dostavkakgbackend.repository;
 
 import kg.geektech.dostavkakgbackend.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,5 +12,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
-    List<User> findAllByEnabledFalse();
+    @Query(value = "SELECT u.* FROM users u WHERE u.is_enabled = FALSE AND now() >= u.created_at + (interval '60 minute')", nativeQuery = true)
+    List<User> findAllByExpiredConfirmToken();
 }

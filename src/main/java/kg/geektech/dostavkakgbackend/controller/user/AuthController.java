@@ -12,8 +12,8 @@ import kg.geektech.dostavkakgbackend.dto.auth.request.RegistrationDto;
 import kg.geektech.dostavkakgbackend.dto.auth.response.AuthDto;
 import kg.geektech.dostavkakgbackend.service.AuthService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,15 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user/auth")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Tag(name = "Авторизация")
 public class AuthController extends BaseController {
     final AuthService authService;
-
-    @Autowired
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/sign-in")
     @Operation(summary = "Авторизаиця", method = "POST")
