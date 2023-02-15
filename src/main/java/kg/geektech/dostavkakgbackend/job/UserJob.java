@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -20,8 +21,7 @@ public class UserJob {
     final MailSenderUtil mailSenderUtil;
     final CommonUtil commonUtil;
 
-    //FIXME добавить почту
-    @Scheduled(cron = "0 * * * *", zone = "Asia/Almaty")
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Almaty")
     public void deleteUsersInDataBase() {
         List<User> users = userRepository.findAllByExpiredConfirmToken();
 
