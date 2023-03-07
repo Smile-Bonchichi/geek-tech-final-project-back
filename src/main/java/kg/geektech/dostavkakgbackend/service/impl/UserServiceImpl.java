@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserInfo(User user) {
         return UserDto.builder()
+                .id(user.getId())
                 .pin(user.getPin())
                 .email(user.getEmail())
                 .fullName(user.getFullName())

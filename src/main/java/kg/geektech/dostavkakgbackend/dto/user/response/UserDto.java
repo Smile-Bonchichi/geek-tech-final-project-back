@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(name = "Модель данных пользователя")
 public class UserDto {
+    @Schema(description = "ID", example = "1")
+    Long id;
     @Schema(description = "ПИН", example = "22212200001155")
     String pin;
     @Schema(description = "Почта", example = "test@gmail.com")

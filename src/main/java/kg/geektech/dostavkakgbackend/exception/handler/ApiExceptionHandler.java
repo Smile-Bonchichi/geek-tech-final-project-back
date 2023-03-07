@@ -8,40 +8,47 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
     @ExceptionHandler(value = BaseException.class)
     public ResponseEntity<BaseResponse> getExceptionMessage(final BaseException e) {
-        return buildBaseResponseMessage(e.getMessage(), e.getStatus());
+        return buildBaseResponseMessage(
+                e.getMessage(),
+                e.getStatus()
+        );
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<?> getAuthenticationExceptionMessage(final AuthenticationException e) {
-        return buildBaseResponseMessage(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        return buildBaseResponseMessage(
+                e.getMessage(),
+                HttpStatus.UNAUTHORIZED
+        );
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException() {
-        return buildBaseResponseMessage("Доступ запрещен", HttpStatus.FORBIDDEN);
+        return buildBaseResponseMessage(
+                "Доступ запрещен",
+                HttpStatus.FORBIDDEN
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(final MethodArgumentNotValidException e) {
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors().forEach(error -> errors.put(
-                ((FieldError) error).getField(),
-                error.getDefaultMessage()
-        ));
-
-        return buildBaseResponseMessage(String.join(" : ", "Недопустимые значения", errors.toString()), HttpStatus.BAD_REQUEST);
+        return buildBaseResponseMessage(
+                e.getBindingResult().getAllErrors().stream()
+                        .map(x -> String.format("%s\n", x.getDefaultMessage()))
+                        .sorted()
+                        .collect(Collectors.joining()),
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

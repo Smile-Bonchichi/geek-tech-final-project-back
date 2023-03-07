@@ -31,7 +31,7 @@ public class CommonUtil {
 
             return htmlFile.toString()
                     .replace("%url", corsDomain)
-                    .replace("%token", String.join("/", corsDomain, token));
+                    .replace("%token", String.join("/confirm/", corsDomain, token));
         } catch (IOException e) {
             throw new MailException(e.getMessage());
         }
